@@ -1,105 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Tiro+Devanagari+Sanskrit&family=Inter:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* Indraprastha Brahman Samaj — Traditional × Modern Design System
+   Saffron, Maroon, Gold on Ivory. All colors HSL.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 40 38% 97%;        /* ivory */
+    --foreground: 0 35% 18%;         /* deep maroon ink */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 40 50% 99%;
+    --card-foreground: 0 35% 18%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 40 50% 99%;
+    --popover-foreground: 0 35% 18%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 18 82% 48%;           /* saffron */
+    --primary-foreground: 40 50% 98%;
+    --primary-glow: 28 95% 60%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 0 55% 32%;          /* maroon */
+    --secondary-foreground: 40 50% 98%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 36 30% 92%;
+    --muted-foreground: 0 15% 35%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 42 70% 52%;            /* gold */
+    --accent-foreground: 0 35% 18%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 75% 45%;
+    --destructive-foreground: 40 50% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 36 30% 85%;
+    --input: 36 30% 88%;
+    --ring: 18 82% 48%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+
+    /* Brand gradients & shadows */
+    --gradient-hero: linear-gradient(135deg, hsl(18 82% 48% / 0.92), hsl(0 55% 32% / 0.92));
+    --gradient-saffron: linear-gradient(135deg, hsl(18 82% 52%), hsl(28 95% 60%));
+    --gradient-gold: linear-gradient(135deg, hsl(42 70% 52%), hsl(45 85% 65%));
+    --gradient-warm: linear-gradient(180deg, hsl(40 60% 98%), hsl(36 50% 94%));
+
+    --shadow-warm: 0 10px 40px -10px hsl(18 82% 48% / 0.35);
+    --shadow-soft: 0 4px 20px -6px hsl(0 35% 18% / 0.12);
+    --shadow-gold: 0 8px 30px -8px hsl(42 70% 52% / 0.4);
+
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --background: 0 30% 8%;
+    --foreground: 40 50% 95%;
+    --card: 0 25% 12%;
+    --card-foreground: 40 50% 95%;
+    --popover: 0 25% 12%;
+    --popover-foreground: 40 50% 95%;
+    --primary: 28 95% 60%;
+    --primary-foreground: 0 30% 8%;
+    --secondary: 0 45% 25%;
+    --secondary-foreground: 40 50% 95%;
+    --muted: 0 20% 18%;
+    --muted-foreground: 36 20% 70%;
+    --accent: 42 70% 52%;
+    --accent-foreground: 0 30% 8%;
+    --destructive: 0 75% 50%;
+    --destructive-foreground: 40 50% 95%;
+    --border: 0 20% 20%;
+    --input: 0 20% 20%;
+    --ring: 28 95% 60%;
   }
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-
+  * { @apply border-border; }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, sans-serif;
   }
+  h1, h2, h3, h4 {
+    font-family: 'Cormorant Garamond', 'Tiro Devanagari Sanskrit', serif;
+    @apply tracking-tight;
+  }
+  .font-sanskrit { font-family: 'Tiro Devanagari Sanskrit', serif; }
+}
+
+@layer utilities {
+  .bg-gradient-hero { background: var(--gradient-hero); }
+  .bg-gradient-saffron { background: var(--gradient-saffron); }
+  .bg-gradient-gold { background: var(--gradient-gold); }
+  .bg-gradient-warm { background: var(--gradient-warm); }
+  .shadow-warm { box-shadow: var(--shadow-warm); }
+  .shadow-soft { box-shadow: var(--shadow-soft); }
+  .shadow-gold { box-shadow: var(--shadow-gold); }
+  .transition-smooth { transition: var(--transition-smooth); }
+
+  .ornate-border {
+    background-image:
+      linear-gradient(hsl(var(--card)), hsl(var(--card))),
+      linear-gradient(135deg, hsl(var(--accent)), hsl(var(--primary)));
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    border: 2px solid transparent;
+  }
+
+  @keyframes flicker {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.85; transform: scale(1.05); }
+  }
+  .animate-flicker { animation: flicker 2.5s ease-in-out infinite; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .animate-float { animation: float 4s ease-in-out infinite; }
+
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .animate-spin-slow { animation: spin-slow 60s linear infinite; }
 }
