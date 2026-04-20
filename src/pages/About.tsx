@@ -1,9 +1,63 @@
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BookOpen, Compass, Eye, Heart, GraduationCap, HandHeart, Users } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { supabase } from "@/integrations/supabase/client";
+import i18n from "@/i18n";
+
+type IntroRow = {
+  id: string;
+  section_key: string;
+  language: string;
+  title: string;
+  body: string;
+  display_order: number;
+};
+
+const sectionStyles: Record<string, string> = {
+  about: "ornate-border",
+  history: "bg-gradient-warm",
+  mission: "border-accent/40",
+  vision: "border-accent/40",
+};
+
+const sectionIcons: Record<string, typeof Heart> = {
+  about: Heart,
+  history: BookOpen,
+  mission: Compass,
+  vision: Eye,
+};
 
 const About = () => {
   const { t } = useTranslation();
+  const [sections, setSections] = useState<IntroRow[]>([]);
+
+  useEffect(() => {
+    const lang = i18n.language || "en";
+    const load = async () => {
+      const { data } = await supabase
+        .from("intro_content")
+        .select("*")
+        .eq("language", lang)
+        .order("display_order");
+      if (data && data.length > 0) {
+        setSections(data as IntroRow[]);
+      } else {
+        // Fallback to English
+        const { data: enData } = await supabase
+          .from("intro_content")
+          .select("*")
+          .eq("language", "en")
+          .order("display_order");
+        setSections((enData as IntroRow[]) ?? []);
+      }
+    };
+    load();
+    i18n.on("languageChanged", load);
+    return () => {
+      i18n.off("languageChanged", load);
+    };
+  }, []);
 
   const values = [
     { icon: BookOpen, key: "dharma" },
@@ -22,37 +76,20 @@ const About = () => {
         <div className="w-24 h-1 bg-gradient-gold mx-auto rounded-full" />
       </header>
 
-      <Card className="p-8 md:p-10 mb-8 ornate-border">
-        <div className="flex items-center gap-3 mb-3">
-          <Heart className="h-5 w-5 text-primary" />
-          <h2 className="font-serif text-2xl font-bold text-secondary">{t("about.aboutTitle")}</h2>
-        </div>
-        <p className="text-muted-foreground leading-relaxed">{t("about.aboutBody")}</p>
-      </Card>
-
-      <Card className="p-8 md:p-10 mb-8 bg-gradient-warm">
-        <div className="flex items-center gap-3 mb-3">
-          <BookOpen className="h-5 w-5 text-primary" />
-          <h2 className="font-serif text-2xl font-bold text-secondary">{t("about.historyTitle")}</h2>
-        </div>
-        <p className="text-muted-foreground leading-relaxed">{t("about.historyBody")}</p>
-      </Card>
-
-      <div className="grid md:grid-cols-2 gap-6 mb-8">
-        <Card className="p-8 border-accent/40">
-          <div className="flex items-center gap-3 mb-3">
-            <Compass className="h-5 w-5 text-primary" />
-            <h2 className="font-serif text-2xl font-bold text-secondary">{t("about.missionTitle")}</h2>
-          </div>
-          <p className="text-muted-foreground leading-relaxed">{t("about.missionBody")}</p>
-        </Card>
-        <Card className="p-8 border-accent/40">
-          <div className="flex items-center gap-3 mb-3">
-            <Eye className="h-5 w-5 text-primary" />
-            <h2 className="font-serif text-2xl font-bold text-secondary">{t("about.visionTitle")}</h2>
-          </div>
-          <p className="text-muted-foreground leading-relaxed">{t("about.visionBody")}</p>
-        </Card>
+      <div className="space-y-6 mb-8">
+        {sections.map((s) => {
+          const Icon = sectionIcons[s.section_key] ?? Heart;
+          const style = sectionStyles[s.section_key] ?? "border-accent/30";
+          return (
+            <Card key={s.id} className={`p-8 md:p-10 ${style}`}>
+              <div className="flex items-center gap-3 mb-3">
+                <Icon className="h-5 w-5 text-primary" />
+                <h2 className="font-serif text-2xl font-bold text-secondary">{s.title}</h2>
+              </div>
+              <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{s.body}</p>
+            </Card>
+          );
+        })}
       </div>
 
       <section>

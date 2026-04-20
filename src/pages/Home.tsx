@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ArrowRight, Bell, Calendar, Users, HandHeart, FileText } from "lucide-react";
@@ -5,11 +6,28 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import hero from "@/assets/hero-banner.jpg";
-import { announcements } from "@/data/seed";
+import { supabase } from "@/integrations/supabase/client";
+
+type Announcement = {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  urgent: boolean;
+};
 
 const Home = () => {
   const { t } = useTranslation();
-  const top = announcements.slice(0, 3);
+  const [top, setTop] = useState<Announcement[]>([]);
+
+  useEffect(() => {
+    supabase
+      .from("announcements")
+      .select("*")
+      .order("date", { ascending: false })
+      .limit(3)
+      .then(({ data }) => setTop((data as Announcement[]) ?? []));
+  }, []);
 
   const quick = [
     { to: "/notices", icon: FileText, key: "notices" },
