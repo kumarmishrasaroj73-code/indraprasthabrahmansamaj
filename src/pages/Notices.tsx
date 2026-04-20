@@ -1,12 +1,22 @@
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FileText, Download, Calendar, Gavel, Users, ScrollText, Scale } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { notices, type Notice } from "@/data/seed";
+import { supabase } from "@/integrations/supabase/client";
 
-const categoryIcons: Record<Notice["category"], typeof FileText> = {
+type Category = "meeting" | "circular" | "decision" | "legal";
+type Notice = {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  category: Category;
+  attachment_url: string | null;
+};
+
+const categoryIcons: Record<Category, typeof FileText> = {
   meeting: Users,
   circular: ScrollText,
   decision: Gavel,
@@ -15,14 +25,27 @@ const categoryIcons: Record<Notice["category"], typeof FileText> = {
 
 const Notices = () => {
   const { t } = useTranslation();
-  const [filter, setFilter] = useState<Notice["category"] | "all">("all");
+  const [items, setItems] = useState<Notice[]>([]);
+  const [filter, setFilter] = useState<Category | "all">("all");
+  const [loading, setLoading] = useState(true);
 
-  const filtered = useMemo(() => {
-    const list = filter === "all" ? notices : notices.filter((n) => n.category === filter);
-    return [...list].sort((a, b) => +new Date(b.date) - +new Date(a.date));
-  }, [filter]);
+  useEffect(() => {
+    supabase
+      .from("notices")
+      .select("*")
+      .order("date", { ascending: false })
+      .then(({ data }) => {
+        setItems((data as Notice[]) ?? []);
+        setLoading(false);
+      });
+  }, []);
 
-  const cats: Array<Notice["category"] | "all"> = ["all", "meeting", "circular", "decision", "legal"];
+  const filtered = useMemo(
+    () => (filter === "all" ? items : items.filter((n) => n.category === filter)),
+    [items, filter]
+  );
+
+  const cats: Array<Category | "all"> = ["all", "meeting", "circular", "decision", "legal"];
 
   return (
     <div className="container py-12 md:py-16 max-w-5xl">
@@ -52,13 +75,14 @@ const Notices = () => {
       </div>
 
       <div className="grid gap-5">
+        {loading && <p className="text-center text-muted-foreground py-12">Loading…</p>}
+        {!loading && filtered.length === 0 && (
+          <p className="text-center text-muted-foreground py-12">No notices.</p>
+        )}
         {filtered.map((n) => {
           const Icon = categoryIcons[n.category];
           return (
-            <Card
-              key={n.id}
-              className="p-6 transition-smooth hover:shadow-warm hover:-translate-y-0.5 border-accent/30"
-            >
+            <Card key={n.id} className="p-6 transition-smooth hover:shadow-warm hover:-translate-y-0.5 border-accent/30">
               <div className="flex flex-col md:flex-row md:items-center gap-4">
                 <div className="shrink-0 w-14 h-14 rounded-xl bg-gradient-warm border border-accent/40 flex items-center justify-center">
                   <Icon className="h-6 w-6 text-primary" />
@@ -78,9 +102,9 @@ const Notices = () => {
                   </h3>
                   <p className="text-sm text-muted-foreground">{n.description}</p>
                 </div>
-                {n.attachment && (
+                {n.attachment_url && (
                   <Button asChild variant="outline" size="sm" className="border-primary/50 text-primary hover:bg-primary hover:text-primary-foreground self-start md:self-center">
-                    <a href={n.attachment} download>
+                    <a href={n.attachment_url} target="_blank" rel="noopener noreferrer">
                       <Download className="h-4 w-4 mr-2" /> {t("notices.download")}
                     </a>
                   </Button>

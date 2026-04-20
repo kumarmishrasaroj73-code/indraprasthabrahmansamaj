@@ -1,12 +1,33 @@
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Bell, AlertTriangle, Calendar } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { announcements } from "@/data/seed";
+import { supabase } from "@/integrations/supabase/client";
+
+type Announcement = {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  urgent: boolean;
+};
 
 const Announcements = () => {
   const { t } = useTranslation();
-  const sorted = [...announcements].sort((a, b) => +new Date(b.date) - +new Date(a.date));
+  const [items, setItems] = useState<Announcement[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    supabase
+      .from("announcements")
+      .select("*")
+      .order("date", { ascending: false })
+      .then(({ data }) => {
+        setItems((data as Announcement[]) ?? []);
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <div className="container py-12 md:py-16 max-w-4xl">
@@ -22,10 +43,11 @@ const Announcements = () => {
       </header>
 
       <div className="space-y-5">
-        {sorted.length === 0 && (
+        {loading && <p className="text-center text-muted-foreground py-12">Loading…</p>}
+        {!loading && items.length === 0 && (
           <p className="text-center text-muted-foreground py-12">{t("announcements.empty")}</p>
         )}
-        {sorted.map((a) => (
+        {items.map((a) => (
           <Card
             key={a.id}
             className={`p-6 md:p-7 transition-smooth hover:shadow-warm ${
@@ -35,9 +57,7 @@ const Announcements = () => {
             <div className="flex items-start gap-4">
               <div
                 className={`shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${
-                  a.urgent
-                    ? "bg-destructive/15 text-destructive"
-                    : "bg-primary/10 text-primary"
+                  a.urgent ? "bg-destructive/15 text-destructive" : "bg-primary/10 text-primary"
                 }`}
               >
                 {a.urgent ? <AlertTriangle className="h-5 w-5" /> : <Bell className="h-5 w-5" />}
