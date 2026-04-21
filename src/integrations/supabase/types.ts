@@ -47,6 +47,202 @@ export type Database = {
         }
         Relationships: []
       }
+      donations: {
+        Row: {
+          amount: number
+          created_at: string
+          created_by: string | null
+          currency: string
+          donated_on: string
+          donor_name: string
+          id: string
+          is_anonymous: boolean
+          is_published: boolean
+          message: string | null
+          method: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          donated_on?: string
+          donor_name: string
+          id?: string
+          is_anonymous?: boolean
+          is_published?: boolean
+          message?: string | null
+          method?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          donated_on?: string
+          donor_name?: string
+          id?: string
+          is_anonymous?: boolean
+          is_published?: boolean
+          message?: string | null
+          method?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      event_rsvps: {
+        Row: {
+          attendees: number
+          created_at: string
+          event_id: string
+          id: string
+          note: string | null
+          user_id: string
+        }
+        Insert: {
+          attendees?: number
+          created_at?: string
+          event_id: string
+          id?: string
+          note?: string | null
+          user_id: string
+        }
+        Update: {
+          attendees?: number
+          created_at?: string
+          event_id?: string
+          id?: string
+          note?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_rsvps_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          allow_rsvp: boolean
+          created_at: string
+          created_by: string | null
+          description: string | null
+          end_date: string | null
+          event_date: string
+          id: string
+          image_url: string | null
+          is_published: boolean
+          location: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          allow_rsvp?: boolean
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          end_date?: string | null
+          event_date: string
+          id?: string
+          image_url?: string | null
+          is_published?: boolean
+          location?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          allow_rsvp?: boolean
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          end_date?: string | null
+          event_date?: string
+          id?: string
+          image_url?: string | null
+          is_published?: boolean
+          location?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      gallery_albums: {
+        Row: {
+          cover_url: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          event_date: string | null
+          id: string
+          is_published: boolean
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          cover_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          event_date?: string | null
+          id?: string
+          is_published?: boolean
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          cover_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          event_date?: string | null
+          id?: string
+          is_published?: boolean
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      gallery_photos: {
+        Row: {
+          album_id: string
+          caption: string | null
+          created_at: string
+          display_order: number
+          id: string
+          photo_url: string
+        }
+        Insert: {
+          album_id: string
+          caption?: string | null
+          created_at?: string
+          display_order?: number
+          id?: string
+          photo_url: string
+        }
+        Update: {
+          album_id?: string
+          caption?: string | null
+          created_at?: string
+          display_order?: number
+          id?: string
+          photo_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gallery_photos_album_id_fkey"
+            columns: ["album_id"]
+            isOneToOne: false
+            referencedRelation: "gallery_albums"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       intro_content: {
         Row: {
           body: string
@@ -148,6 +344,66 @@ export type Database = {
           marital_status?: string | null
           photo_url?: string | null
           profession?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      member_registrations: {
+        Row: {
+          city: string | null
+          created_at: string
+          education: string | null
+          email: string | null
+          family_head: string | null
+          full_name: string
+          gotra: string | null
+          id: string
+          locality: string | null
+          message: string | null
+          phone: string | null
+          profession: string | null
+          review_notes: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          city?: string | null
+          created_at?: string
+          education?: string | null
+          email?: string | null
+          family_head?: string | null
+          full_name: string
+          gotra?: string | null
+          id?: string
+          locality?: string | null
+          message?: string | null
+          phone?: string | null
+          profession?: string | null
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          city?: string | null
+          created_at?: string
+          education?: string | null
+          email?: string | null
+          family_head?: string | null
+          full_name?: string
+          gotra?: string | null
+          id?: string
+          locality?: string | null
+          message?: string | null
+          phone?: string | null
+          profession?: string | null
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
           updated_at?: string
         }
         Relationships: []
