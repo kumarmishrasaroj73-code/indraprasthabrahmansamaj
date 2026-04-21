@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { DonorWall } from "@/components/DonorWall";
 
 const PRESETS = [101, 251, 501, 1001, 2100, 5100];
 
@@ -219,6 +220,8 @@ const Donate = () => {
         <p className="text-center text-sm text-muted-foreground italic">{t("donate.note")}</p>
         <p className="text-center font-sanskrit text-xl text-secondary mt-4">{t("donate.thankYou")}</p>
       </section>
+
+      <DonorWall />
     </div>
   );
 };
