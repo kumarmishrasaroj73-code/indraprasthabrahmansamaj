@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import hero from "@/assets/parshuram.jpg";
+import logo from "@/assets/logo.jpg";
 import { supabase } from "@/integrations/supabase/client";
 
 type Announcement = {
@@ -39,35 +40,54 @@ const Home = () => {
   return (
     <div>
       {/* Hero */}
-      <section className="relative">
-        <div className="absolute inset-0">
-          <img src={hero} alt="Bhagwan Parshuram" className="w-full h-full object-cover object-top" width={1920} height={1024} />
-          <div className="absolute inset-0 bg-gradient-to-b from-secondary/70 via-secondary/60 to-primary/70" />
-        </div>
-        <div className="relative container py-20 md:py-32 text-center text-primary-foreground">
-          <div className="font-sanskrit text-2xl md:text-3xl text-accent-foreground/90 mb-3 drop-shadow">
-            ॥ ॐ ॥
-          </div>
-          <p className="uppercase tracking-[0.3em] text-sm md:text-base text-accent mb-4">
-            {t("hero.welcome")}
-          </p>
-          <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl font-bold mb-6 drop-shadow-lg">
-            {t("brand.name")}
-          </h1>
-          <p className="max-w-2xl mx-auto text-base md:text-lg text-primary-foreground/90 mb-8">
-            {t("hero.subtitle")}
-          </p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 shadow-gold">
-              <Link to="/about">
-                {t("hero.ctaAbout")} <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="bg-background/10 border-primary-foreground/40 text-primary-foreground hover:bg-background/20 backdrop-blur">
-              <Link to="/donate">
-                <HandHeart className="mr-2 h-4 w-4" /> {t("hero.ctaDonate")}
-              </Link>
-            </Button>
+      <section className="relative bg-gradient-warm border-b border-accent/30">
+        <div className="container py-10 md:py-16">
+          <div className="grid items-center gap-8 md:gap-12 md:grid-cols-[auto_1fr_auto]">
+            {/* Logo on the left */}
+            <div className="flex justify-center md:justify-start">
+              <img
+                src={logo}
+                alt="Indraprastha Brahman Samaj logo"
+                className="h-32 w-32 md:h-44 md:w-44 rounded-full object-cover ring-4 ring-accent shadow-warm"
+              />
+            </div>
+
+            {/* Brand text in the middle */}
+            <div className="text-center md:text-left">
+              <div className="font-sanskrit text-2xl md:text-3xl text-primary mb-2">॥ ॐ ॥</div>
+              <p className="uppercase tracking-[0.3em] text-xs md:text-sm text-accent-foreground/80 mb-3">
+                {t("hero.welcome")}
+              </p>
+              <h1 className="font-serif text-3xl md:text-5xl font-bold text-secondary mb-4">
+                {t("brand.name")}
+              </h1>
+              <p className="text-sm md:text-base text-muted-foreground mb-6 max-w-xl mx-auto md:mx-0">
+                {t("hero.subtitle")}
+              </p>
+              <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+                <Button asChild size="lg" className="bg-gradient-saffron text-primary-foreground shadow-warm">
+                  <Link to="/about">
+                    {t("hero.ctaAbout")} <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button asChild size="lg" variant="outline" className="border-accent">
+                  <Link to="/donate">
+                    <HandHeart className="mr-2 h-4 w-4" /> {t("hero.ctaDonate")}
+                  </Link>
+                </Button>
+              </div>
+            </div>
+
+            {/* Parshuram photo on the right — no text overlay */}
+            <div className="flex justify-center md:justify-end">
+              <img
+                src={hero}
+                alt="Bhagwan Parshuram"
+                className="w-56 md:w-72 lg:w-80 rounded-2xl object-cover shadow-warm ring-2 ring-accent/40"
+                width={640}
+                height={640}
+              />
+            </div>
           </div>
         </div>
       </section>
