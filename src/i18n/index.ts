@@ -18,7 +18,7 @@ const en = {
     matrimonial: "Matrimonial",
   },
   brand: {
-    name: "Indraprastha Brahman Samaj",
+    name: "Indraprastha Brahman Samaj (Regd.)",
     tagline: "Heritage • Harmony • Humanity",
   },
   hero: {
@@ -144,7 +144,7 @@ const en = {
 
 const hi: typeof en = {
   nav: { home: "मुख्य पृष्ठ", about: "परिचय", announcements: "घोषणाएँ", notices: "सूचना पट", donate: "दान करें", directory: "निर्देशिका", matrimonial: "विवाह" },
-  brand: { name: "इन्द्रप्रस्थ ब्राह्मण समाज", tagline: "विरासत • सद्भाव • मानवता" },
+  brand: { name: "इंद्रप्रस्थ ब्राह्मण समाज (पंजीकृत)", tagline: "विरासत • सद्भाव • मानवता" },
   hero: {
     welcome: "स्वागत है",
     subtitle: "एक एकजुट समुदाय जो अपनी कालातीत परंपराओं को संजोए हुए एक उज्ज्वल आधुनिक भविष्य की ओर अग्रसर है।",
@@ -219,7 +219,7 @@ const hi: typeof en = {
 
 const sa: typeof en = {
   nav: { home: "मुख्यपृष्ठम्", about: "परिचयः", announcements: "घोषणाः", notices: "सूचनाफलकम्", donate: "दानम्", directory: "सूची", matrimonial: "विवाहः" },
-  brand: { name: "इन्द्रप्रस्थब्राह्मणसमाजः", tagline: "परम्परा • सद्भावः • मानवता" },
+  brand: { name: "इन्द्रप्रस्थब्राह्मणसमाजः (पञ्जीकृतः)", tagline: "परम्परा • सद्भावः • मानवता" },
   hero: { welcome: "स्वागतम्", subtitle: "एकः समाजः यः सनातनपरम्परां पालयन् नवीनं भविष्यम् आलिङ्गति।", ctaAbout: "अस्माकं कथां पश्यतु", ctaDonate: "समाजाय दीयताम्" },
   home: {
     introTitle: "अस्माकं पावनः समुदायः",
