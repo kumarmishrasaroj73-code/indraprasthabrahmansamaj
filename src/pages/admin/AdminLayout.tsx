@@ -1,5 +1,5 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
-import { Bell, FileText, BookOpen, LogOut, Flame, Home } from "lucide-react";
+import { Bell, FileText, BookOpen, LogOut, Flame, Home, Users, Heart } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 
@@ -7,6 +7,8 @@ const navItems = [
   { to: "/admin", end: true, icon: Home, label: "Overview" },
   { to: "/admin/announcements", icon: Bell, label: "Announcements" },
   { to: "/admin/notices", icon: FileText, label: "Notices" },
+  { to: "/admin/members", icon: Users, label: "Directory" },
+  { to: "/admin/matrimonial", icon: Heart, label: "Matrimonial" },
   { to: "/admin/intro", icon: BookOpen, label: "About Content" },
 ];
 
