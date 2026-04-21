@@ -5,7 +5,7 @@ import { ArrowRight, Bell, Calendar, Users, HandHeart, FileText } from "lucide-r
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import hero from "@/assets/hero-banner.jpg";
+import hero from "@/assets/parshuram.jpg";
 import { supabase } from "@/integrations/supabase/client";
 
 type Announcement = {
@@ -41,8 +41,8 @@ const Home = () => {
       {/* Hero */}
       <section className="relative">
         <div className="absolute inset-0">
-          <img src={hero} alt="" className="w-full h-full object-cover" width={1920} height={1024} />
-          <div className="absolute inset-0 bg-gradient-hero" />
+          <img src={hero} alt="Bhagwan Parshuram" className="w-full h-full object-cover object-top" width={1920} height={1024} />
+          <div className="absolute inset-0 bg-gradient-to-b from-secondary/70 via-secondary/60 to-primary/70" />
         </div>
         <div className="relative container py-20 md:py-32 text-center text-primary-foreground">
           <div className="font-sanskrit text-2xl md:text-3xl text-accent-foreground/90 mb-3 drop-shadow">

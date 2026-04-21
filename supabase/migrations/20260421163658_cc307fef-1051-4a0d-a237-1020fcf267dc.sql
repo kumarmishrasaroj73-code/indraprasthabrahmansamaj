@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Public can read notice attachments" ON storage.objects;

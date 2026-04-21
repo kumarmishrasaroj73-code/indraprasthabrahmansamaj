@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Menu, X, Flame } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/logo.jpg";
 
 export const Header = () => {
   const { t } = useTranslation();
@@ -15,6 +16,8 @@ export const Header = () => {
     { to: "/about", label: t("nav.about") },
     { to: "/announcements", label: t("nav.announcements") },
     { to: "/notices", label: t("nav.notices") },
+    { to: "/directory", label: t("nav.directory") },
+    { to: "/matrimonial", label: t("nav.matrimonial") },
     { to: "/donate", label: t("nav.donate") },
   ];
 
@@ -22,9 +25,11 @@ export const Header = () => {
     <header className="sticky top-0 z-50 backdrop-blur bg-background/85 border-b border-accent/30 shadow-soft">
       <div className="container flex items-center justify-between h-16 md:h-20">
         <Link to="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
-          <div className="relative h-10 w-10 rounded-full bg-gradient-saffron flex items-center justify-center shadow-warm">
-            <Flame className="h-5 w-5 text-primary-foreground animate-flicker" />
-          </div>
+          <img
+            src={logo}
+            alt="Indraprastha Brahman Samaj logo"
+            className="h-11 w-11 md:h-12 md:w-12 rounded-full object-cover ring-2 ring-accent shadow-warm"
+          />
           <div className="leading-tight">
             <div className="font-serif text-base md:text-lg font-bold text-secondary">
               {t("brand.name")}

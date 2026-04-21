@@ -83,6 +83,129 @@ export type Database = {
         }
         Relationships: []
       }
+      matrimonial_profiles: {
+        Row: {
+          about: string | null
+          city: string | null
+          contact_email: string | null
+          contact_name: string | null
+          contact_phone: string | null
+          created_at: string
+          created_by: string | null
+          date_of_birth: string | null
+          education: string | null
+          full_name: string
+          gender: string
+          gotra: string | null
+          height_cm: number | null
+          id: string
+          income_range: string | null
+          is_published: boolean
+          marital_status: string | null
+          photo_url: string | null
+          profession: string | null
+          updated_at: string
+        }
+        Insert: {
+          about?: string | null
+          city?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          created_by?: string | null
+          date_of_birth?: string | null
+          education?: string | null
+          full_name: string
+          gender: string
+          gotra?: string | null
+          height_cm?: number | null
+          id?: string
+          income_range?: string | null
+          is_published?: boolean
+          marital_status?: string | null
+          photo_url?: string | null
+          profession?: string | null
+          updated_at?: string
+        }
+        Update: {
+          about?: string | null
+          city?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          created_by?: string | null
+          date_of_birth?: string | null
+          education?: string | null
+          full_name?: string
+          gender?: string
+          gotra?: string | null
+          height_cm?: number | null
+          id?: string
+          income_range?: string | null
+          is_published?: boolean
+          marital_status?: string | null
+          photo_url?: string | null
+          profession?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      members: {
+        Row: {
+          city: string | null
+          created_at: string
+          created_by: string | null
+          education: string | null
+          email: string | null
+          family_head: string | null
+          full_name: string
+          gotra: string | null
+          id: string
+          is_published: boolean
+          locality: string | null
+          phone: string | null
+          photo_url: string | null
+          profession: string | null
+          updated_at: string
+        }
+        Insert: {
+          city?: string | null
+          created_at?: string
+          created_by?: string | null
+          education?: string | null
+          email?: string | null
+          family_head?: string | null
+          full_name: string
+          gotra?: string | null
+          id?: string
+          is_published?: boolean
+          locality?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          profession?: string | null
+          updated_at?: string
+        }
+        Update: {
+          city?: string | null
+          created_at?: string
+          created_by?: string | null
+          education?: string | null
+          email?: string | null
+          family_head?: string | null
+          full_name?: string
+          gotra?: string | null
+          id?: string
+          is_published?: boolean
+          locality?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          profession?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       notices: {
         Row: {
           attachment_url: string | null

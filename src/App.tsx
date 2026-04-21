@@ -11,12 +11,16 @@ import About from "./pages/About";
 import Announcements from "./pages/Announcements";
 import Notices from "./pages/Notices";
 import Donate from "./pages/Donate";
+import Directory from "./pages/Directory";
+import Matrimonial from "./pages/Matrimonial";
 import Auth from "./pages/Auth";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminOverview from "./pages/admin/AdminOverview";
 import AdminAnnouncements from "./pages/admin/AdminAnnouncements";
 import AdminNotices from "./pages/admin/AdminNotices";
 import AdminIntro from "./pages/admin/AdminIntro";
+import AdminMembers from "./pages/admin/AdminMembers";
+import AdminMatrimonial from "./pages/admin/AdminMatrimonial";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -35,6 +39,8 @@ const App = () => (
               <Route path="/announcements" element={<Announcements />} />
               <Route path="/notices" element={<Notices />} />
               <Route path="/donate" element={<Donate />} />
+              <Route path="/directory" element={<Directory />} />
+              <Route path="/matrimonial" element={<Matrimonial />} />
             </Route>
             <Route path="/auth" element={<Auth />} />
             <Route
@@ -49,6 +55,8 @@ const App = () => (
               <Route path="announcements" element={<AdminAnnouncements />} />
               <Route path="notices" element={<AdminNotices />} />
               <Route path="intro" element={<AdminIntro />} />
+              <Route path="members" element={<AdminMembers />} />
+              <Route path="matrimonial" element={<AdminMatrimonial />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
