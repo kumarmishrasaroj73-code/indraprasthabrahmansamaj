@@ -3,7 +3,12 @@ import { Navigate } from "react-router-dom";
 import {
   MessageCircle, Search, Plus, ArrowLeft, Send, Check, CheckCheck, Users, Smile,
   Paperclip, Mic, X, Reply, Trash2, Star, Pin, Copy, Image as ImageIcon, FileText, Play, Pause, Download, MoreVertical, StarOff,
+  BarChart3, Megaphone, Info,
 } from "lucide-react";
+import { PollCard, type Poll } from "@/components/chat/PollCard";
+import { CreatePollDialog } from "@/components/chat/CreatePollDialog";
+import { GroupInfoDialog } from "@/components/chat/GroupInfoDialog";
+import { Switch } from "@/components/ui/switch";
 import EmojiPicker, { EmojiClickData, Theme } from "emoji-picker-react";
 import { format, isToday, isYesterday, isSameDay, formatDistanceToNow } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
