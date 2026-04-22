@@ -263,12 +263,20 @@ const ChatWindow = ({
   const [showSearch, setShowSearch] = useState(false);
   const [searchQ, setSearchQ] = useState("");
   const [showPinned, setShowPinned] = useState(false);
+  const [showGroupInfo, setShowGroupInfo] = useState(false);
+  const [showCreatePoll, setShowCreatePoll] = useState(false);
+  const [polls, setPolls] = useState<Poll[]>([]);
   const [lightbox, setLightbox] = useState<{ url: string; mime: string } | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const profileMap = new Map((conversation.participants ?? []).map((p) => [p.user_id, p.profile]));
   const messageMap = new Map(messages.map((m) => [m.id, m]));
+  const pollByMsg = useMemo(() => new Map(polls.map((p) => [p.message_id, p])), [polls]);
+  const myParticipant = (conversation.participants ?? []).find((p) => p.user_id === userId);
+  const iAmConvAdmin = !!myParticipant?.is_admin;
+  const isBroadcast = !!conversation.is_broadcast;
+  const canPost = !isBroadcast || iAmConvAdmin;
 
   const load = async () => {
     const { data } = await supabase
