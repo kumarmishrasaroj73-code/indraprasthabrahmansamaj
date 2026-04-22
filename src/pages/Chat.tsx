@@ -936,7 +936,7 @@ const NewConversationDialog = ({
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
           <Button onClick={create} disabled={selected.size === 0 || busy} className="bg-gradient-saffron text-primary-foreground">
-            {busy ? "Creating…" : selected.size > 1 ? "Create group" : "Start chat"}
+            {busy ? "Creating…" : isBroadcast ? "Create channel" : selected.size > 1 ? "Create group" : "Start chat"}
           </Button>
         </DialogFooter>
       </DialogContent>
