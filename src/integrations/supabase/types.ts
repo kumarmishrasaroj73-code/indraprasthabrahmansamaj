@@ -88,7 +88,15 @@ export type Database = {
           deleted_at: string | null
           edited_at: string | null
           id: string
+          is_pinned: boolean
+          media_duration_ms: number | null
+          media_mime: string | null
+          media_name: string | null
+          media_size: number | null
+          media_thumbnail: string | null
+          media_url: string | null
           message_type: string
+          reply_to_id: string | null
           sender_id: string
         }
         Insert: {
@@ -98,7 +106,15 @@ export type Database = {
           deleted_at?: string | null
           edited_at?: string | null
           id?: string
+          is_pinned?: boolean
+          media_duration_ms?: number | null
+          media_mime?: string | null
+          media_name?: string | null
+          media_size?: number | null
+          media_thumbnail?: string | null
+          media_url?: string | null
           message_type?: string
+          reply_to_id?: string | null
           sender_id: string
         }
         Update: {
@@ -108,7 +124,15 @@ export type Database = {
           deleted_at?: string | null
           edited_at?: string | null
           id?: string
+          is_pinned?: boolean
+          media_duration_ms?: number | null
+          media_mime?: string | null
+          media_name?: string | null
+          media_size?: number | null
+          media_thumbnail?: string | null
+          media_url?: string | null
           message_type?: string
+          reply_to_id?: string | null
           sender_id?: string
         }
         Relationships: [
@@ -117,6 +141,13 @@ export type Database = {
             columns: ["conversation_id"]
             isOneToOne: false
             referencedRelation: "chat_conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_messages_reply_to_id_fkey"
+            columns: ["reply_to_id"]
+            isOneToOne: false
+            referencedRelation: "chat_messages"
             referencedColumns: ["id"]
           },
         ]
@@ -152,6 +183,67 @@ export type Database = {
             columns: ["conversation_id"]
             isOneToOne: false
             referencedRelation: "chat_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_reactions: {
+        Row: {
+          created_at: string
+          emoji: string
+          id: string
+          message_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          emoji: string
+          id?: string
+          message_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          emoji?: string
+          id?: string
+          message_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_reactions_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "chat_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_starred: {
+        Row: {
+          created_at: string
+          id: string
+          message_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_starred_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "chat_messages"
             referencedColumns: ["id"]
           },
         ]
@@ -670,6 +762,10 @@ export type Database = {
       is_approved_member: { Args: { _user_id: string }; Returns: boolean }
       is_chat_participant: {
         Args: { _conv_id: string; _user_id: string }
+        Returns: boolean
+      }
+      is_participant_of_message: {
+        Args: { _message_id: string; _user_id: string }
         Returns: boolean
       }
     }
