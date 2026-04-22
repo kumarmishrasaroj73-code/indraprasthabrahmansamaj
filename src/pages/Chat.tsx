@@ -204,12 +204,15 @@ const Chat = () => {
                 <Avatar className="h-12 w-12 ring-2 ring-accent/40">
                   {c.displayAvatar && <AvatarImage src={c.displayAvatar} />}
                   <AvatarFallback className="bg-gradient-saffron text-primary-foreground">
-                    {c.is_group ? <Users className="h-5 w-5" /> : initials(c.displayName)}
+                    {c.is_broadcast ? <Megaphone className="h-5 w-5" /> : c.is_group ? <Users className="h-5 w-5" /> : initials(c.displayName)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="min-w-0 flex-1">
                   <div className="flex justify-between items-baseline gap-2">
-                    <h3 className="font-medium text-secondary truncate">{c.displayName}</h3>
+                    <h3 className="font-medium text-secondary truncate flex items-center gap-1">
+                      {c.is_broadcast && <Megaphone className="h-3 w-3 text-primary shrink-0" />}
+                      {c.displayName}
+                    </h3>
                     <span className="text-[10px] text-muted-foreground shrink-0">
                       {formatDistanceToNow(new Date(c.last_message_at), { addSuffix: false })}
                     </span>
@@ -217,6 +220,7 @@ const Chat = () => {
                   <div className="flex justify-between items-center gap-2">
                     <p className="text-xs text-muted-foreground truncate">
                       {c.lastMessage?.deleted_at ? <em>deleted</em> :
+                        c.lastMessage?.message_type === "poll" ? "📊 Poll" :
                         c.lastMessage?.media_mime?.startsWith("image/") ? "📷 Photo" :
                         c.lastMessage?.media_mime?.startsWith("video/") ? "🎬 Video" :
                         c.lastMessage?.media_mime?.startsWith("audio/") ? "🎤 Voice note" :
