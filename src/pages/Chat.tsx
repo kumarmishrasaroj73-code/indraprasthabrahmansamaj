@@ -306,6 +306,7 @@ const ChatWindow = ({
     const ch = supabase.channel(`chat-${conversation.id}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "chat_messages", filter: `conversation_id=eq.${conversation.id}` }, () => load())
       .on("postgres_changes", { event: "*", schema: "public", table: "chat_reactions" }, () => load())
+      .on("postgres_changes", { event: "*", schema: "public", table: "chat_polls", filter: `conversation_id=eq.${conversation.id}` }, () => load())
       .subscribe();
     return () => { supabase.removeChannel(ch); };
     // eslint-disable-next-line
