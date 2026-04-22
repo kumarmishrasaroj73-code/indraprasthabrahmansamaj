@@ -293,7 +293,7 @@ const ChatWindow = ({
       ]);
       setReactions((rxs as Reaction[]) ?? []);
       setStars(new Set((stz ?? []).map((s: any) => s.message_id)));
-      setPolls((pls as Poll[]) ?? []);
+      setPolls(((pls as any[]) ?? []) as Poll[]);
     }
     await supabase.from("chat_participants")
       .update({ last_read_at: new Date().toISOString() })
