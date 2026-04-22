@@ -53,6 +53,7 @@ export type Database = {
           created_at: string
           created_by: string | null
           id: string
+          is_broadcast: boolean
           is_group: boolean
           last_message_at: string
           title: string | null
@@ -63,6 +64,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           id?: string
+          is_broadcast?: boolean
           is_group?: boolean
           last_message_at?: string
           title?: string | null
@@ -73,6 +75,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           id?: string
+          is_broadcast?: boolean
           is_group?: boolean
           last_message_at?: string
           title?: string | null
@@ -183,6 +186,92 @@ export type Database = {
             columns: ["conversation_id"]
             isOneToOne: false
             referencedRelation: "chat_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_poll_votes: {
+        Row: {
+          created_at: string
+          id: string
+          option_id: string
+          poll_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          option_id: string
+          poll_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          option_id?: string
+          poll_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_poll_votes_poll_id_fkey"
+            columns: ["poll_id"]
+            isOneToOne: false
+            referencedRelation: "chat_polls"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_polls: {
+        Row: {
+          allow_multiple: boolean
+          closes_at: string | null
+          conversation_id: string
+          created_at: string
+          created_by: string
+          id: string
+          is_closed: boolean
+          message_id: string
+          options: Json
+          question: string
+        }
+        Insert: {
+          allow_multiple?: boolean
+          closes_at?: string | null
+          conversation_id: string
+          created_at?: string
+          created_by: string
+          id?: string
+          is_closed?: boolean
+          message_id: string
+          options: Json
+          question: string
+        }
+        Update: {
+          allow_multiple?: boolean
+          closes_at?: string | null
+          conversation_id?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          is_closed?: boolean
+          message_id?: string
+          options?: Json
+          question?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_polls_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "chat_conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_polls_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: true
+            referencedRelation: "chat_messages"
             referencedColumns: ["id"]
           },
         ]
