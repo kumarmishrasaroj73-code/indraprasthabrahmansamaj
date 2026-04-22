@@ -514,8 +514,11 @@ const ChatWindow = ({
                           <em className="text-xs opacity-70 flex items-center gap-1"><Trash2 className="h-3 w-3" /> message deleted</em>
                         ) : (
                           <>
+                            {pollByMsg.get(m.id) && (
+                              <PollCard poll={pollByMsg.get(m.id)!} userId={userId} mine={mine} canManage={iAmConvAdmin || pollByMsg.get(m.id)!.created_by === userId} />
+                            )}
                             {m.media_url && <MediaPreview message={m} mine={mine} onOpen={(url, mime) => setLightbox({ url, mime })} />}
-                            {m.body && <p className="text-sm whitespace-pre-wrap break-words">{m.body}</p>}
+                            {m.body && !pollByMsg.get(m.id) && <p className="text-sm whitespace-pre-wrap break-words">{m.body}</p>}
                           </>
                         )}
 
