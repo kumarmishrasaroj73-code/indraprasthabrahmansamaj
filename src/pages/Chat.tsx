@@ -612,33 +612,47 @@ const ChatWindow = ({
       )}
 
       {/* Composer */}
-      <div className="bg-card border-t border-accent/30 p-2 flex items-end gap-1">
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="ghost" size="icon" className="text-muted-foreground" type="button"><Smile className="h-5 w-5" /></Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0 border-0" side="top" align="start">
-            <EmojiPicker onEmojiClick={(e: EmojiClickData) => setText((t) => t + e.emoji)} theme={Theme.AUTO} width={320} height={380} />
-          </PopoverContent>
-        </Popover>
+      {canPost ? (
+        <div className="bg-card border-t border-accent/30 p-2 flex items-end gap-1">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="ghost" size="icon" className="text-muted-foreground" type="button"><Smile className="h-5 w-5" /></Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0 border-0" side="top" align="start">
+              <EmojiPicker onEmojiClick={(e: EmojiClickData) => setText((t) => t + e.emoji)} theme={Theme.AUTO} width={320} height={380} />
+            </PopoverContent>
+          </Popover>
 
-        <input ref={fileInputRef} type="file" hidden onChange={onPickFile}
-          accept="image/*,video/*,audio/*,application/pdf,application/zip,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
-        <Button variant="ghost" size="icon" className="text-muted-foreground" onClick={() => fileInputRef.current?.click()}>
-          <Paperclip className="h-5 w-5" />
-        </Button>
-
-        <textarea value={text} onChange={(e) => setText(e.target.value)} onKeyDown={onKey} rows={1} placeholder="Type a message…"
-          className="flex-1 resize-none rounded-2xl border border-accent/30 bg-muted/40 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 max-h-32" />
-
-        {text.trim() ? (
-          <Button onClick={() => send()} disabled={sending} size="icon" className="h-10 w-10 rounded-full bg-gradient-saffron text-primary-foreground shadow-warm shrink-0">
-            <Send className="h-4 w-4" />
+          <input ref={fileInputRef} type="file" hidden onChange={onPickFile}
+            accept="image/*,video/*,audio/*,application/pdf,application/zip,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+          <Button variant="ghost" size="icon" className="text-muted-foreground" onClick={() => fileInputRef.current?.click()}>
+            <Paperclip className="h-5 w-5" />
           </Button>
-        ) : (
-          <VoiceRecorder onSend={sendVoice} disabled={sending} />
-        )}
-      </div>
+
+          <Button variant="ghost" size="icon" className="text-muted-foreground" onClick={() => setShowCreatePoll(true)} title="Create poll">
+            <BarChart3 className="h-5 w-5" />
+          </Button>
+
+          <textarea value={text} onChange={(e) => setText(e.target.value)} onKeyDown={onKey} rows={1} placeholder="Type a message…"
+            className="flex-1 resize-none rounded-2xl border border-accent/30 bg-muted/40 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 max-h-32" />
+
+          {text.trim() ? (
+            <Button onClick={() => send()} disabled={sending} size="icon" className="h-10 w-10 rounded-full bg-gradient-saffron text-primary-foreground shadow-warm shrink-0">
+              <Send className="h-4 w-4" />
+            </Button>
+          ) : (
+            <VoiceRecorder onSend={sendVoice} disabled={sending} />
+          )}
+        </div>
+      ) : (
+        <div className="bg-muted/60 border-t border-accent/30 p-3 text-center text-xs text-muted-foreground flex items-center justify-center gap-2">
+          <Megaphone className="h-4 w-4" /> Only admins can post in this broadcast channel.
+        </div>
+      )}
+
+      <CreatePollDialog open={showCreatePoll} setOpen={setShowCreatePoll} conversationId={conversation.id} userId={userId} />
+      <GroupInfoDialog open={showGroupInfo} setOpen={setShowGroupInfo} conversation={conversation} userId={userId} onChanged={() => { onUpdated(); }} />
+
 
       {/* Pinned dialog */}
       <Dialog open={showPinned} onOpenChange={setShowPinned}>
