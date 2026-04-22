@@ -221,7 +221,7 @@ const hi: typeof en = {
 };
 
 const sa: typeof en = {
-  nav: { home: "मुख्यपृष्ठम्", about: "परिचयः", announcements: "घोषणाः", notices: "सूचनाफलकम्", donate: "दानम्", directory: "सूची", matrimonial: "विवाहः" },
+  nav: { home: "मुख्यपृष्ठम्", about: "परिचयः", announcements: "घोषणाः", notices: "सूचनाफलकम्", events: "कार्यक्रमाः", gallery: "चित्रसङ्ग्रहः", donate: "दानम्", directory: "सूची", matrimonial: "विवाहः", register: "सदस्यता" },
   brand: { name: "इन्द्रप्रस्थब्राह्मणसमाजः (पञ्जीकृतः)", tagline: "परम्परा • सद्भावः • मानवता" },
   hero: { welcome: "स्वागतम्", subtitle: "एकः समाजः यः सनातनपरम्परां पालयन् नवीनं भविष्यम् आलिङ्गति।", ctaAbout: "अस्माकं कथां पश्यतु", ctaDonate: "समाजाय दीयताम्" },
   home: {
