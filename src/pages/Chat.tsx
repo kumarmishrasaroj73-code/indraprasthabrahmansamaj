@@ -286,12 +286,14 @@ const ChatWindow = ({
     setMessages(msgs);
     if (msgs.length) {
       const ids = msgs.map((m) => m.id);
-      const [{ data: rxs }, { data: stz }] = await Promise.all([
+      const [{ data: rxs }, { data: stz }, { data: pls }] = await Promise.all([
         supabase.from("chat_reactions").select("*").in("message_id", ids),
         supabase.from("chat_starred").select("message_id").in("message_id", ids).eq("user_id", userId),
+        supabase.from("chat_polls").select("*").eq("conversation_id", conversation.id),
       ]);
       setReactions((rxs as Reaction[]) ?? []);
       setStars(new Set((stz ?? []).map((s: any) => s.message_id)));
+      setPolls((pls as Poll[]) ?? []);
     }
     await supabase.from("chat_participants")
       .update({ last_read_at: new Date().toISOString() })
