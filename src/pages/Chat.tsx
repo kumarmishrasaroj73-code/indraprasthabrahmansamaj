@@ -413,18 +413,23 @@ const ChatWindow = ({
         <Button variant="ghost" size="icon" className="md:hidden text-primary-foreground hover:bg-primary-foreground/10" onClick={onBack}>
           <ArrowLeft className="h-5 w-5" />
         </Button>
-        <Avatar className="h-10 w-10 ring-2 ring-primary-foreground/30">
-          {conversation.displayAvatar && <AvatarImage src={conversation.displayAvatar} />}
-          <AvatarFallback className="bg-primary-foreground/20 text-primary-foreground">
-            {conversation.is_group ? <Users className="h-5 w-5" /> : initials(conversation.displayName)}
-          </AvatarFallback>
-        </Avatar>
-        <div className="min-w-0 flex-1">
-          <h3 className="font-serif font-semibold leading-tight truncate">{conversation.displayName}</h3>
-          <p className="text-[11px] opacity-80 truncate">
-            {conversation.is_group ? `${conversation.participants?.length ?? 0} members` : "tap for info"}
-          </p>
-        </div>
+        <button onClick={() => conversation.is_group && setShowGroupInfo(true)} className="flex items-center gap-3 flex-1 min-w-0 text-left">
+          <Avatar className="h-10 w-10 ring-2 ring-primary-foreground/30">
+            {conversation.displayAvatar && <AvatarImage src={conversation.displayAvatar} />}
+            <AvatarFallback className="bg-primary-foreground/20 text-primary-foreground">
+              {isBroadcast ? <Megaphone className="h-5 w-5" /> : conversation.is_group ? <Users className="h-5 w-5" /> : initials(conversation.displayName)}
+            </AvatarFallback>
+          </Avatar>
+          <div className="min-w-0 flex-1">
+            <h3 className="font-serif font-semibold leading-tight truncate flex items-center gap-1.5">
+              {conversation.displayName}
+              {isBroadcast && <Megaphone className="h-3.5 w-3.5 opacity-90" />}
+            </h3>
+            <p className="text-[11px] opacity-80 truncate">
+              {isBroadcast ? "Broadcast channel" : conversation.is_group ? `${conversation.participants?.length ?? 0} members · tap for info` : "1:1 chat"}
+            </p>
+          </div>
+        </button>
         <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-foreground/10" onClick={() => setShowSearch((v) => !v)}>
           <Search className="h-5 w-5" />
         </Button>
@@ -432,6 +437,11 @@ const ChatWindow = ({
           <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-foreground/10 relative" onClick={() => setShowPinned(true)}>
             <Pin className="h-5 w-5" />
             <span className="absolute -top-0.5 -right-0.5 bg-primary-foreground text-primary text-[9px] rounded-full h-4 min-w-4 px-1">{pinned.length}</span>
+          </Button>
+        )}
+        {conversation.is_group && (
+          <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-foreground/10" onClick={() => setShowGroupInfo(true)}>
+            <Info className="h-5 w-5" />
           </Button>
         )}
       </div>
