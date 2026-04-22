@@ -32,7 +32,7 @@ import { Label } from "@/components/ui/label";
 // ---------- types ----------
 type Profile = { display_name: string | null; avatar_url: string | null };
 type Conversation = {
-  id: string; is_group: boolean; title: string | null; avatar_url: string | null;
+  id: string; is_group: boolean; is_broadcast?: boolean; title: string | null; avatar_url: string | null;
   last_message_at: string;
   participants?: Participant[]; lastMessage?: Message | null; unread?: number;
   displayName?: string; displayAvatar?: string | null;
