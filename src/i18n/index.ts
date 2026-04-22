@@ -13,9 +13,12 @@ const en = {
     about: "About",
     announcements: "Announcements",
     notices: "Notices",
+    events: "Events",
+    gallery: "Gallery",
     donate: "Donate",
     directory: "Directory",
     matrimonial: "Matrimonial",
+    register: "Join Us",
   },
   brand: {
     name: "Indraprastha Brahman Samaj (Regd.)",
