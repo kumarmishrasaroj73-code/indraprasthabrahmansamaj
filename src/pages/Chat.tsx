@@ -823,6 +823,7 @@ const NewConversationDialog = ({
   const [groupTitle, setGroupTitle] = useState("");
   const [search, setSearch] = useState("");
   const [busy, setBusy] = useState(false);
+  const [isBroadcast, setIsBroadcast] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -830,7 +831,7 @@ const NewConversationDialog = ({
       const { data: ms } = await supabase
         .from("members").select("id, full_name, email, city")
         .eq("is_published", true).not("email", "is", null).order("full_name");
-      setMembers((ms as Member[]) ?? []); setSelected(new Set()); setGroupTitle(""); setSearch("");
+      setMembers((ms as Member[]) ?? []); setSelected(new Set()); setGroupTitle(""); setSearch(""); setIsBroadcast(false);
     })();
   }, [open]);
 
