@@ -48,6 +48,9 @@ const App = () => (
               <Route path="/donate" element={<Donate />} />
               <Route path="/directory" element={<Directory />} />
               <Route path="/matrimonial" element={<Matrimonial />} />
+              <Route path="/events" element={<Events />} />
+              <Route path="/gallery" element={<Gallery />} />
+              <Route path="/register" element={<Register />} />
             </Route>
             <Route path="/auth" element={<Auth />} />
             <Route
@@ -64,6 +67,10 @@ const App = () => (
               <Route path="intro" element={<AdminIntro />} />
               <Route path="members" element={<AdminMembers />} />
               <Route path="matrimonial" element={<AdminMatrimonial />} />
+              <Route path="events" element={<AdminEvents />} />
+              <Route path="gallery" element={<AdminGallery />} />
+              <Route path="registrations" element={<AdminRegistrations />} />
+              <Route path="donations" element={<AdminDonations />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
