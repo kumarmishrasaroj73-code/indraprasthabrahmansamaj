@@ -146,7 +146,7 @@ const en = {
 };
 
 const hi: typeof en = {
-  nav: { home: "मुख्य पृष्ठ", about: "परिचय", announcements: "घोषणाएँ", notices: "सूचना पट", donate: "दान करें", directory: "निर्देशिका", matrimonial: "विवाह" },
+  nav: { home: "मुख्य पृष्ठ", about: "परिचय", announcements: "घोषणाएँ", notices: "सूचना पट", events: "कार्यक्रम", gallery: "गैलरी", donate: "दान करें", directory: "निर्देशिका", matrimonial: "विवाह", register: "सदस्यता लें" },
   brand: { name: "इंद्रप्रस्थ ब्राह्मण समाज (पंजीकृत)", tagline: "विरासत • सद्भाव • मानवता" },
   hero: {
     welcome: "स्वागत है",
