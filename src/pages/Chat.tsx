@@ -900,10 +900,20 @@ const NewConversationDialog = ({
         <DialogHeader><DialogTitle>New chat</DialogTitle></DialogHeader>
         <div className="space-y-3">
           <Input placeholder="Search members…" value={search} onChange={(e) => setSearch(e.target.value)} />
-          {selected.size > 1 && (
+          <div className="flex items-center justify-between rounded border border-accent/30 bg-muted/40 px-3 py-2">
+            <div className="flex items-start gap-2">
+              <Megaphone className="h-4 w-4 text-primary mt-0.5" />
+              <div>
+                <Label className="text-sm">Broadcast channel</Label>
+                <p className="text-[11px] text-muted-foreground">Only admins can post; everyone else reads.</p>
+              </div>
+            </div>
+            <Switch checked={isBroadcast} onCheckedChange={setIsBroadcast} />
+          </div>
+          {(selected.size > 1 || isBroadcast) && (
             <div>
-              <Label className="text-xs">Group name</Label>
-              <Input value={groupTitle} onChange={(e) => setGroupTitle(e.target.value)} placeholder="e.g. Yuva Mandal" />
+              <Label className="text-xs">{isBroadcast ? "Channel name" : "Group name"}</Label>
+              <Input value={groupTitle} onChange={(e) => setGroupTitle(e.target.value)} placeholder={isBroadcast ? "e.g. Samaj Notices" : "e.g. Yuva Mandal"} />
             </div>
           )}
           <ScrollArea className="h-72 rounded border border-accent/30">
