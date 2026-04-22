@@ -3,7 +3,12 @@ import { Navigate } from "react-router-dom";
 import {
   MessageCircle, Search, Plus, ArrowLeft, Send, Check, CheckCheck, Users, Smile,
   Paperclip, Mic, X, Reply, Trash2, Star, Pin, Copy, Image as ImageIcon, FileText, Play, Pause, Download, MoreVertical, StarOff,
+  BarChart3, Megaphone, Info,
 } from "lucide-react";
+import { PollCard, type Poll } from "@/components/chat/PollCard";
+import { CreatePollDialog } from "@/components/chat/CreatePollDialog";
+import { GroupInfoDialog } from "@/components/chat/GroupInfoDialog";
+import { Switch } from "@/components/ui/switch";
 import EmojiPicker, { EmojiClickData, Theme } from "emoji-picker-react";
 import { format, isToday, isYesterday, isSameDay, formatDistanceToNow } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
@@ -27,7 +32,7 @@ import { Label } from "@/components/ui/label";
 // ---------- types ----------
 type Profile = { display_name: string | null; avatar_url: string | null };
 type Conversation = {
-  id: string; is_group: boolean; title: string | null; avatar_url: string | null;
+  id: string; is_group: boolean; is_broadcast?: boolean; title: string | null; avatar_url: string | null;
   last_message_at: string;
   participants?: Participant[]; lastMessage?: Message | null; unread?: number;
   displayName?: string; displayAvatar?: string | null;
@@ -199,12 +204,15 @@ const Chat = () => {
                 <Avatar className="h-12 w-12 ring-2 ring-accent/40">
                   {c.displayAvatar && <AvatarImage src={c.displayAvatar} />}
                   <AvatarFallback className="bg-gradient-saffron text-primary-foreground">
-                    {c.is_group ? <Users className="h-5 w-5" /> : initials(c.displayName)}
+                    {c.is_broadcast ? <Megaphone className="h-5 w-5" /> : c.is_group ? <Users className="h-5 w-5" /> : initials(c.displayName)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="min-w-0 flex-1">
                   <div className="flex justify-between items-baseline gap-2">
-                    <h3 className="font-medium text-secondary truncate">{c.displayName}</h3>
+                    <h3 className="font-medium text-secondary truncate flex items-center gap-1">
+                      {c.is_broadcast && <Megaphone className="h-3 w-3 text-primary shrink-0" />}
+                      {c.displayName}
+                    </h3>
                     <span className="text-[10px] text-muted-foreground shrink-0">
                       {formatDistanceToNow(new Date(c.last_message_at), { addSuffix: false })}
                     </span>
@@ -212,6 +220,7 @@ const Chat = () => {
                   <div className="flex justify-between items-center gap-2">
                     <p className="text-xs text-muted-foreground truncate">
                       {c.lastMessage?.deleted_at ? <em>deleted</em> :
+                        c.lastMessage?.message_type === "poll" ? "📊 Poll" :
                         c.lastMessage?.media_mime?.startsWith("image/") ? "📷 Photo" :
                         c.lastMessage?.media_mime?.startsWith("video/") ? "🎬 Video" :
                         c.lastMessage?.media_mime?.startsWith("audio/") ? "🎤 Voice note" :
@@ -258,12 +267,20 @@ const ChatWindow = ({
   const [showSearch, setShowSearch] = useState(false);
   const [searchQ, setSearchQ] = useState("");
   const [showPinned, setShowPinned] = useState(false);
+  const [showGroupInfo, setShowGroupInfo] = useState(false);
+  const [showCreatePoll, setShowCreatePoll] = useState(false);
+  const [polls, setPolls] = useState<Poll[]>([]);
   const [lightbox, setLightbox] = useState<{ url: string; mime: string } | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const profileMap = new Map((conversation.participants ?? []).map((p) => [p.user_id, p.profile]));
   const messageMap = new Map(messages.map((m) => [m.id, m]));
+  const pollByMsg = useMemo(() => new Map(polls.map((p) => [p.message_id, p])), [polls]);
+  const myParticipant = (conversation.participants ?? []).find((p) => p.user_id === userId);
+  const iAmConvAdmin = !!myParticipant?.is_admin;
+  const isBroadcast = !!conversation.is_broadcast;
+  const canPost = !isBroadcast || iAmConvAdmin;
 
   const load = async () => {
     const { data } = await supabase
@@ -273,12 +290,14 @@ const ChatWindow = ({
     setMessages(msgs);
     if (msgs.length) {
       const ids = msgs.map((m) => m.id);
-      const [{ data: rxs }, { data: stz }] = await Promise.all([
+      const [{ data: rxs }, { data: stz }, { data: pls }] = await Promise.all([
         supabase.from("chat_reactions").select("*").in("message_id", ids),
         supabase.from("chat_starred").select("message_id").in("message_id", ids).eq("user_id", userId),
+        supabase.from("chat_polls").select("*").eq("conversation_id", conversation.id),
       ]);
       setReactions((rxs as Reaction[]) ?? []);
       setStars(new Set((stz ?? []).map((s: any) => s.message_id)));
+      setPolls(((pls as any[]) ?? []) as Poll[]);
     }
     await supabase.from("chat_participants")
       .update({ last_read_at: new Date().toISOString() })
@@ -291,6 +310,7 @@ const ChatWindow = ({
     const ch = supabase.channel(`chat-${conversation.id}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "chat_messages", filter: `conversation_id=eq.${conversation.id}` }, () => load())
       .on("postgres_changes", { event: "*", schema: "public", table: "chat_reactions" }, () => load())
+      .on("postgres_changes", { event: "*", schema: "public", table: "chat_polls", filter: `conversation_id=eq.${conversation.id}` }, () => load())
       .subscribe();
     return () => { supabase.removeChannel(ch); };
     // eslint-disable-next-line
@@ -397,18 +417,23 @@ const ChatWindow = ({
         <Button variant="ghost" size="icon" className="md:hidden text-primary-foreground hover:bg-primary-foreground/10" onClick={onBack}>
           <ArrowLeft className="h-5 w-5" />
         </Button>
-        <Avatar className="h-10 w-10 ring-2 ring-primary-foreground/30">
-          {conversation.displayAvatar && <AvatarImage src={conversation.displayAvatar} />}
-          <AvatarFallback className="bg-primary-foreground/20 text-primary-foreground">
-            {conversation.is_group ? <Users className="h-5 w-5" /> : initials(conversation.displayName)}
-          </AvatarFallback>
-        </Avatar>
-        <div className="min-w-0 flex-1">
-          <h3 className="font-serif font-semibold leading-tight truncate">{conversation.displayName}</h3>
-          <p className="text-[11px] opacity-80 truncate">
-            {conversation.is_group ? `${conversation.participants?.length ?? 0} members` : "tap for info"}
-          </p>
-        </div>
+        <button onClick={() => conversation.is_group && setShowGroupInfo(true)} className="flex items-center gap-3 flex-1 min-w-0 text-left">
+          <Avatar className="h-10 w-10 ring-2 ring-primary-foreground/30">
+            {conversation.displayAvatar && <AvatarImage src={conversation.displayAvatar} />}
+            <AvatarFallback className="bg-primary-foreground/20 text-primary-foreground">
+              {isBroadcast ? <Megaphone className="h-5 w-5" /> : conversation.is_group ? <Users className="h-5 w-5" /> : initials(conversation.displayName)}
+            </AvatarFallback>
+          </Avatar>
+          <div className="min-w-0 flex-1">
+            <h3 className="font-serif font-semibold leading-tight truncate flex items-center gap-1.5">
+              {conversation.displayName}
+              {isBroadcast && <Megaphone className="h-3.5 w-3.5 opacity-90" />}
+            </h3>
+            <p className="text-[11px] opacity-80 truncate">
+              {isBroadcast ? "Broadcast channel" : conversation.is_group ? `${conversation.participants?.length ?? 0} members · tap for info` : "1:1 chat"}
+            </p>
+          </div>
+        </button>
         <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-foreground/10" onClick={() => setShowSearch((v) => !v)}>
           <Search className="h-5 w-5" />
         </Button>
@@ -416,6 +441,11 @@ const ChatWindow = ({
           <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-foreground/10 relative" onClick={() => setShowPinned(true)}>
             <Pin className="h-5 w-5" />
             <span className="absolute -top-0.5 -right-0.5 bg-primary-foreground text-primary text-[9px] rounded-full h-4 min-w-4 px-1">{pinned.length}</span>
+          </Button>
+        )}
+        {conversation.is_group && (
+          <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-foreground/10" onClick={() => setShowGroupInfo(true)}>
+            <Info className="h-5 w-5" />
           </Button>
         )}
       </div>
@@ -488,8 +518,11 @@ const ChatWindow = ({
                           <em className="text-xs opacity-70 flex items-center gap-1"><Trash2 className="h-3 w-3" /> message deleted</em>
                         ) : (
                           <>
+                            {pollByMsg.get(m.id) && (
+                              <PollCard poll={pollByMsg.get(m.id)!} userId={userId} mine={mine} canManage={iAmConvAdmin || pollByMsg.get(m.id)!.created_by === userId} />
+                            )}
                             {m.media_url && <MediaPreview message={m} mine={mine} onOpen={(url, mime) => setLightbox({ url, mime })} />}
-                            {m.body && <p className="text-sm whitespace-pre-wrap break-words">{m.body}</p>}
+                            {m.body && !pollByMsg.get(m.id) && <p className="text-sm whitespace-pre-wrap break-words">{m.body}</p>}
                           </>
                         )}
 
@@ -583,33 +616,47 @@ const ChatWindow = ({
       )}
 
       {/* Composer */}
-      <div className="bg-card border-t border-accent/30 p-2 flex items-end gap-1">
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="ghost" size="icon" className="text-muted-foreground" type="button"><Smile className="h-5 w-5" /></Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0 border-0" side="top" align="start">
-            <EmojiPicker onEmojiClick={(e: EmojiClickData) => setText((t) => t + e.emoji)} theme={Theme.AUTO} width={320} height={380} />
-          </PopoverContent>
-        </Popover>
+      {canPost ? (
+        <div className="bg-card border-t border-accent/30 p-2 flex items-end gap-1">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="ghost" size="icon" className="text-muted-foreground" type="button"><Smile className="h-5 w-5" /></Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0 border-0" side="top" align="start">
+              <EmojiPicker onEmojiClick={(e: EmojiClickData) => setText((t) => t + e.emoji)} theme={Theme.AUTO} width={320} height={380} />
+            </PopoverContent>
+          </Popover>
 
-        <input ref={fileInputRef} type="file" hidden onChange={onPickFile}
-          accept="image/*,video/*,audio/*,application/pdf,application/zip,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
-        <Button variant="ghost" size="icon" className="text-muted-foreground" onClick={() => fileInputRef.current?.click()}>
-          <Paperclip className="h-5 w-5" />
-        </Button>
-
-        <textarea value={text} onChange={(e) => setText(e.target.value)} onKeyDown={onKey} rows={1} placeholder="Type a message…"
-          className="flex-1 resize-none rounded-2xl border border-accent/30 bg-muted/40 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 max-h-32" />
-
-        {text.trim() ? (
-          <Button onClick={() => send()} disabled={sending} size="icon" className="h-10 w-10 rounded-full bg-gradient-saffron text-primary-foreground shadow-warm shrink-0">
-            <Send className="h-4 w-4" />
+          <input ref={fileInputRef} type="file" hidden onChange={onPickFile}
+            accept="image/*,video/*,audio/*,application/pdf,application/zip,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+          <Button variant="ghost" size="icon" className="text-muted-foreground" onClick={() => fileInputRef.current?.click()}>
+            <Paperclip className="h-5 w-5" />
           </Button>
-        ) : (
-          <VoiceRecorder onSend={sendVoice} disabled={sending} />
-        )}
-      </div>
+
+          <Button variant="ghost" size="icon" className="text-muted-foreground" onClick={() => setShowCreatePoll(true)} title="Create poll">
+            <BarChart3 className="h-5 w-5" />
+          </Button>
+
+          <textarea value={text} onChange={(e) => setText(e.target.value)} onKeyDown={onKey} rows={1} placeholder="Type a message…"
+            className="flex-1 resize-none rounded-2xl border border-accent/30 bg-muted/40 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 max-h-32" />
+
+          {text.trim() ? (
+            <Button onClick={() => send()} disabled={sending} size="icon" className="h-10 w-10 rounded-full bg-gradient-saffron text-primary-foreground shadow-warm shrink-0">
+              <Send className="h-4 w-4" />
+            </Button>
+          ) : (
+            <VoiceRecorder onSend={sendVoice} disabled={sending} />
+          )}
+        </div>
+      ) : (
+        <div className="bg-muted/60 border-t border-accent/30 p-3 text-center text-xs text-muted-foreground flex items-center justify-center gap-2">
+          <Megaphone className="h-4 w-4" /> Only admins can post in this broadcast channel.
+        </div>
+      )}
+
+      <CreatePollDialog open={showCreatePoll} setOpen={setShowCreatePoll} conversationId={conversation.id} userId={userId} />
+      <GroupInfoDialog open={showGroupInfo} setOpen={setShowGroupInfo} conversation={conversation} userId={userId} onChanged={() => { onUpdated(); }} />
+
 
       {/* Pinned dialog */}
       <Dialog open={showPinned} onOpenChange={setShowPinned}>
@@ -776,6 +823,7 @@ const NewConversationDialog = ({
   const [groupTitle, setGroupTitle] = useState("");
   const [search, setSearch] = useState("");
   const [busy, setBusy] = useState(false);
+  const [isBroadcast, setIsBroadcast] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -783,7 +831,7 @@ const NewConversationDialog = ({
       const { data: ms } = await supabase
         .from("members").select("id, full_name, email, city")
         .eq("is_published", true).not("email", "is", null).order("full_name");
-      setMembers((ms as Member[]) ?? []); setSelected(new Set()); setGroupTitle(""); setSearch("");
+      setMembers((ms as Member[]) ?? []); setSelected(new Set()); setGroupTitle(""); setSearch(""); setIsBroadcast(false);
     })();
   }, [open]);
 
@@ -811,7 +859,7 @@ const NewConversationDialog = ({
         setBusy(false); return;
       }
 
-      const isGroup = resolved.length > 1;
+      const isGroup = resolved.length > 1 || isBroadcast;
       if (!isGroup) {
         const { data: mine } = await supabase.from("chat_participants").select("conversation_id").eq("user_id", userId);
         const myConvIds = (mine ?? []).map((p) => p.conversation_id);
@@ -825,7 +873,7 @@ const NewConversationDialog = ({
       }
 
       const { data: conv, error: convErr } = await supabase.from("chat_conversations")
-        .insert({ is_group: isGroup, title: isGroup ? (groupTitle.trim() || "Group") : null, created_by: userId })
+        .insert({ is_group: isGroup, is_broadcast: isBroadcast, title: isGroup ? (groupTitle.trim() || (isBroadcast ? "Broadcast" : "Group")) : null, created_by: userId })
         .select().single();
       if (convErr || !conv) throw convErr;
 
@@ -852,10 +900,20 @@ const NewConversationDialog = ({
         <DialogHeader><DialogTitle>New chat</DialogTitle></DialogHeader>
         <div className="space-y-3">
           <Input placeholder="Search members…" value={search} onChange={(e) => setSearch(e.target.value)} />
-          {selected.size > 1 && (
+          <div className="flex items-center justify-between rounded border border-accent/30 bg-muted/40 px-3 py-2">
+            <div className="flex items-start gap-2">
+              <Megaphone className="h-4 w-4 text-primary mt-0.5" />
+              <div>
+                <Label className="text-sm">Broadcast channel</Label>
+                <p className="text-[11px] text-muted-foreground">Only admins can post; everyone else reads.</p>
+              </div>
+            </div>
+            <Switch checked={isBroadcast} onCheckedChange={setIsBroadcast} />
+          </div>
+          {(selected.size > 1 || isBroadcast) && (
             <div>
-              <Label className="text-xs">Group name</Label>
-              <Input value={groupTitle} onChange={(e) => setGroupTitle(e.target.value)} placeholder="e.g. Yuva Mandal" />
+              <Label className="text-xs">{isBroadcast ? "Channel name" : "Group name"}</Label>
+              <Input value={groupTitle} onChange={(e) => setGroupTitle(e.target.value)} placeholder={isBroadcast ? "e.g. Samaj Notices" : "e.g. Yuva Mandal"} />
             </div>
           )}
           <ScrollArea className="h-72 rounded border border-accent/30">
@@ -878,7 +936,7 @@ const NewConversationDialog = ({
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
           <Button onClick={create} disabled={selected.size === 0 || busy} className="bg-gradient-saffron text-primary-foreground">
-            {busy ? "Creating…" : selected.size > 1 ? "Create group" : "Start chat"}
+            {busy ? "Creating…" : isBroadcast ? "Create channel" : selected.size > 1 ? "Create group" : "Start chat"}
           </Button>
         </DialogFooter>
       </DialogContent>
