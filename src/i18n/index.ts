@@ -19,6 +19,7 @@ const en = {
     directory: "Directory",
     matrimonial: "Matrimonial",
     register: "Join Us",
+    chat: "Chat",
   },
   brand: {
     name: "Indraprastha Brahman Samaj (Regd.)",
@@ -146,7 +147,7 @@ const en = {
 };
 
 const hi: typeof en = {
-  nav: { home: "मुख्य पृष्ठ", about: "परिचय", announcements: "घोषणाएँ", notices: "सूचना पट", events: "कार्यक्रम", gallery: "गैलरी", donate: "दान करें", directory: "निर्देशिका", matrimonial: "विवाह", register: "सदस्यता लें" },
+  nav: { home: "मुख्य पृष्ठ", about: "परिचय", announcements: "घोषणाएँ", notices: "सूचना पट", events: "कार्यक्रम", gallery: "गैलरी", donate: "दान करें", directory: "निर्देशिका", matrimonial: "विवाह", register: "सदस्यता लें", chat: "चैट" },
   brand: { name: "इंद्रप्रस्थ ब्राह्मण समाज (पंजीकृत)", tagline: "विरासत • सद्भाव • मानवता" },
   hero: {
     welcome: "स्वागत है",
@@ -221,7 +222,7 @@ const hi: typeof en = {
 };
 
 const sa: typeof en = {
-  nav: { home: "मुख्यपृष्ठम्", about: "परिचयः", announcements: "घोषणाः", notices: "सूचनाफलकम्", events: "कार्यक्रमाः", gallery: "चित्रसङ्ग्रहः", donate: "दानम्", directory: "सूची", matrimonial: "विवाहः", register: "सदस्यता" },
+  nav: { home: "मुख्यपृष्ठम्", about: "परिचयः", announcements: "घोषणाः", notices: "सूचनाफलकम्", events: "कार्यक्रमाः", gallery: "चित्रसङ्ग्रहः", donate: "दानम्", directory: "सूची", matrimonial: "विवाहः", register: "सदस्यता", chat: "सम्भाषणम्" },
   brand: { name: "इन्द्रप्रस्थब्राह्मणसमाजः (पञ्जीकृतः)", tagline: "परम्परा • सद्भावः • मानवता" },
   hero: { welcome: "स्वागतम्", subtitle: "एकः समाजः यः सनातनपरम्परां पालयन् नवीनं भविष्यम् आलिङ्गति।", ctaAbout: "अस्माकं कथां पश्यतु", ctaDonate: "समाजाय दीयताम्" },
   home: {

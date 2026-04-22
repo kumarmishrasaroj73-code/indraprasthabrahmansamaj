@@ -20,6 +20,7 @@ export const Header = () => {
     { to: "/gallery", label: t("nav.gallery") },
     { to: "/directory", label: t("nav.directory") },
     { to: "/matrimonial", label: t("nav.matrimonial") },
+    { to: "/chat", label: t("nav.chat") },
     { to: "/register", label: t("nav.register") },
     { to: "/donate", label: t("nav.donate") },
   ];

@@ -16,6 +16,7 @@ import Matrimonial from "./pages/Matrimonial";
 import Events from "./pages/Events";
 import Gallery from "./pages/Gallery";
 import Register from "./pages/Register";
+import Chat from "./pages/Chat";
 import Auth from "./pages/Auth";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminOverview from "./pages/admin/AdminOverview";
@@ -51,6 +52,7 @@ const App = () => (
               <Route path="/events" element={<Events />} />
               <Route path="/gallery" element={<Gallery />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/chat" element={<Chat />} />
             </Route>
             <Route path="/auth" element={<Auth />} />
             <Route
