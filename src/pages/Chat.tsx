@@ -859,7 +859,7 @@ const NewConversationDialog = ({
         setBusy(false); return;
       }
 
-      const isGroup = resolved.length > 1;
+      const isGroup = resolved.length > 1 || isBroadcast;
       if (!isGroup) {
         const { data: mine } = await supabase.from("chat_participants").select("conversation_id").eq("user_id", userId);
         const myConvIds = (mine ?? []).map((p) => p.conversation_id);
@@ -873,7 +873,7 @@ const NewConversationDialog = ({
       }
 
       const { data: conv, error: convErr } = await supabase.from("chat_conversations")
-        .insert({ is_group: isGroup, title: isGroup ? (groupTitle.trim() || "Group") : null, created_by: userId })
+        .insert({ is_group: isGroup, is_broadcast: isBroadcast, title: isGroup ? (groupTitle.trim() || (isBroadcast ? "Broadcast" : "Group")) : null, created_by: userId })
         .select().single();
       if (convErr || !conv) throw convErr;
 
