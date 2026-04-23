@@ -6,6 +6,7 @@ type AuthContextValue = {
   user: User | null;
   session: Session | null;
   isAdmin: boolean;
+  canViewDirectory: boolean;
   loading: boolean;
   signOut: () => Promise<void>;
 };
@@ -16,47 +17,44 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [hasDirectoryGrant, setHasDirectoryGrant] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const loadFlags = (uid: string) => {
+    supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", uid)
+      .eq("role", "admin")
+      .maybeSingle()
+      .then(({ data }) => setIsAdmin(!!data));
+    supabase
+      .from("directory_access")
+      .select("id")
+      .eq("user_id", uid)
+      .maybeSingle()
+      .then(({ data }) => setHasDirectoryGrant(!!data));
+  };
+
   useEffect(() => {
-    // Set up listener FIRST
     const { data: sub } = supabase.auth.onAuthStateChange((_event, newSession) => {
       setSession(newSession);
       setUser(newSession?.user ?? null);
       if (newSession?.user) {
-        // Defer role lookup to avoid deadlock
-        setTimeout(() => {
-          supabase
-            .from("user_roles")
-            .select("role")
-            .eq("user_id", newSession.user.id)
-            .eq("role", "admin")
-            .maybeSingle()
-            .then(({ data }) => setIsAdmin(!!data));
-        }, 0);
+        setTimeout(() => loadFlags(newSession.user.id), 0);
       } else {
         setIsAdmin(false);
+        setHasDirectoryGrant(false);
       }
     });
 
-    // Then check existing session
     supabase.auth.getSession().then(({ data: { session: existing } }) => {
       setSession(existing);
       setUser(existing?.user ?? null);
       if (existing?.user) {
-        supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", existing.user.id)
-          .eq("role", "admin")
-          .maybeSingle()
-          .then(({ data }) => {
-            setIsAdmin(!!data);
-            setLoading(false);
-          });
-      } else {
-        setLoading(false);
+        loadFlags(existing.user.id);
       }
+      setLoading(false);
     });
 
     return () => sub.subscription.unsubscribe();
@@ -67,7 +65,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, isAdmin, loading, signOut }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        session,
+        isAdmin,
+        canViewDirectory: isAdmin || hasDirectoryGrant,
+        loading,
+        signOut,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
