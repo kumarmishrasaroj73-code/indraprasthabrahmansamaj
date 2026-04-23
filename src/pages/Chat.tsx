@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import {
   MessageCircle, Search, Plus, ArrowLeft, Send, Check, CheckCheck, Users, Smile,
   Paperclip, Mic, X, Reply, Trash2, Star, Pin, Copy, Image as ImageIcon, FileText, Play, Pause, Download, MoreVertical, StarOff,
-  BarChart3, Megaphone, Info,
+  BarChart3, Megaphone, Info, Phone, Video as VideoIcon,
 } from "lucide-react";
 import { PollCard, type Poll } from "@/components/chat/PollCard";
 import { CreatePollDialog } from "@/components/chat/CreatePollDialog";
@@ -435,6 +435,28 @@ const ChatWindow = ({
             </p>
           </div>
         </button>
+        {!isBroadcast && (conversation.participants?.length ?? 0) > 1 && (
+          <>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-primary-foreground hover:bg-primary-foreground/10"
+              onClick={() => triggerCall(conversation.id, "voice")}
+              title="Voice call"
+            >
+              <Phone className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-primary-foreground hover:bg-primary-foreground/10"
+              onClick={() => triggerCall(conversation.id, "video")}
+              title="Video call"
+            >
+              <VideoIcon className="h-5 w-5" />
+            </Button>
+          </>
+        )}
         <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-foreground/10" onClick={() => setShowSearch((v) => !v)}>
           <Search className="h-5 w-5" />
         </Button>
