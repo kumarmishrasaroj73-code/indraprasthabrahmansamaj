@@ -679,7 +679,12 @@ const ChatWindow = ({
 
       <CreatePollDialog open={showCreatePoll} setOpen={setShowCreatePoll} conversationId={conversation.id} userId={userId} />
       <GroupInfoDialog open={showGroupInfo} setOpen={setShowGroupInfo} conversation={conversation} userId={userId} onChanged={() => { onUpdated(); }} />
-
+      <CallDialog
+        conversationId={conversation.id}
+        userId={userId}
+        participantIds={(conversation.participants ?? []).map((p) => p.user_id).filter((id) => id !== userId)}
+        conversationName={conversation.displayName}
+      />
 
       {/* Pinned dialog */}
       <Dialog open={showPinned} onOpenChange={setShowPinned}>
