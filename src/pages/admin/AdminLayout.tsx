@@ -1,5 +1,20 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
-import { Bell, FileText, BookOpen, LogOut, Flame, Home, Users, Heart, Calendar, Image, UserPlus, IndianRupee } from "lucide-react";
+import {
+  Bell,
+  FileText,
+  BookOpen,
+  LogOut,
+  Flame,
+  Home,
+  Users,
+  Heart,
+  Calendar,
+  CalendarDays,
+  Image,
+  UserPlus,
+  IndianRupee,
+  Lock,
+} from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 
@@ -8,8 +23,10 @@ const navItems = [
   { to: "/admin/announcements", icon: Bell, label: "Announcements" },
   { to: "/admin/notices", icon: FileText, label: "Notices" },
   { to: "/admin/events", icon: Calendar, label: "Events" },
+  { to: "/admin/meetings", icon: CalendarDays, label: "Meetings" },
   { to: "/admin/gallery", icon: Image, label: "Gallery" },
   { to: "/admin/members", icon: Users, label: "Directory" },
+  { to: "/admin/directory-access", icon: Lock, label: "Directory Access" },
   { to: "/admin/registrations", icon: UserPlus, label: "Registrations" },
   { to: "/admin/matrimonial", icon: Heart, label: "Matrimonial" },
   { to: "/admin/donations", icon: IndianRupee, label: "Donations" },

@@ -47,6 +47,74 @@ export type Database = {
         }
         Relationships: []
       }
+      chat_call_signals: {
+        Row: {
+          call_id: string
+          created_at: string
+          from_user: string
+          id: string
+          payload: Json
+          signal_type: string
+          to_user: string | null
+        }
+        Insert: {
+          call_id: string
+          created_at?: string
+          from_user: string
+          id?: string
+          payload: Json
+          signal_type: string
+          to_user?: string | null
+        }
+        Update: {
+          call_id?: string
+          created_at?: string
+          from_user?: string
+          id?: string
+          payload?: Json
+          signal_type?: string
+          to_user?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_call_signals_call_id_fkey"
+            columns: ["call_id"]
+            isOneToOne: false
+            referencedRelation: "chat_calls"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_calls: {
+        Row: {
+          call_type: string
+          conversation_id: string
+          ended_at: string | null
+          id: string
+          initiated_by: string
+          started_at: string
+          status: string
+        }
+        Insert: {
+          call_type?: string
+          conversation_id: string
+          ended_at?: string | null
+          id?: string
+          initiated_by: string
+          started_at?: string
+          status?: string
+        }
+        Update: {
+          call_type?: string
+          conversation_id?: string
+          ended_at?: string | null
+          id?: string
+          initiated_by?: string
+          started_at?: string
+          status?: string
+        }
+        Relationships: []
+      }
       chat_conversations: {
         Row: {
           avatar_url: string | null
@@ -336,6 +404,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      directory_access: {
+        Row: {
+          granted_at: string
+          granted_by: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          granted_at?: string
+          granted_by?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          granted_at?: string
+          granted_by?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       donations: {
         Row: {
@@ -638,6 +727,57 @@ export type Database = {
         }
         Relationships: []
       }
+      meetings: {
+        Row: {
+          agenda: string | null
+          created_at: string
+          created_by: string | null
+          duration_minutes: number
+          id: string
+          is_published: boolean
+          location: string | null
+          meeting_link: string | null
+          meeting_type: string
+          minutes: string | null
+          scheduled_at: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          agenda?: string | null
+          created_at?: string
+          created_by?: string | null
+          duration_minutes?: number
+          id?: string
+          is_published?: boolean
+          location?: string | null
+          meeting_link?: string | null
+          meeting_type?: string
+          minutes?: string | null
+          scheduled_at: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          agenda?: string | null
+          created_at?: string
+          created_by?: string | null
+          duration_minutes?: number
+          id?: string
+          is_published?: boolean
+          location?: string | null
+          meeting_link?: string | null
+          meeting_type?: string
+          minutes?: string | null
+          scheduled_at?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       member_registrations: {
         Row: {
           city: string | null
@@ -841,6 +981,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_view_directory: { Args: { _user_id: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

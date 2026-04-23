@@ -1,10 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Users, Search, MapPin, Briefcase, GraduationCap, Phone, Mail } from "lucide-react";
+import { Users, Search, MapPin, Briefcase, GraduationCap, Phone, Mail, Lock } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 type Member = {
   id: string;
@@ -22,11 +25,17 @@ type Member = {
 
 const Directory = () => {
   const { t } = useTranslation();
+  const { user, canViewDirectory, loading: authLoading } = useAuth();
   const [items, setItems] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState("");
 
   useEffect(() => {
+    if (authLoading) return;
+    if (!user || !canViewDirectory) {
+      setLoading(false);
+      return;
+    }
     supabase
       .from("members")
       .select("*")
@@ -35,7 +44,7 @@ const Directory = () => {
         setItems((data as Member[]) ?? []);
         setLoading(false);
       });
-  }, []);
+  }, [authLoading, user, canViewDirectory]);
 
   const filtered = useMemo(() => {
     const s = q.trim().toLowerCase();
@@ -46,6 +55,52 @@ const Directory = () => {
         .some((v) => (v as string).toLowerCase().includes(s))
     );
   }, [items, q]);
+
+  if (authLoading) {
+    return <p className="container py-20 text-center text-muted-foreground">Loading…</p>;
+  }
+
+  if (!user) {
+    return (
+      <div className="container py-20 max-w-lg text-center">
+        <div className="mx-auto h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-5">
+          <Lock className="h-7 w-7 text-primary" />
+        </div>
+        <h1 className="font-serif text-3xl font-bold text-secondary mb-3">
+          {t("directory.title")}
+        </h1>
+        <p className="text-muted-foreground mb-6">
+          The community directory is private. Please sign in with your member account to view it.
+        </p>
+        <Button asChild className="bg-gradient-saffron text-primary-foreground">
+          <Link to="/auth">Sign in</Link>
+        </Button>
+      </div>
+    );
+  }
+
+  if (!canViewDirectory) {
+    return (
+      <div className="container py-20 max-w-lg text-center">
+        <div className="mx-auto h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-5">
+          <Lock className="h-7 w-7 text-primary" />
+        </div>
+        <h1 className="font-serif text-3xl font-bold text-secondary mb-3">
+          Directory access required
+        </h1>
+        <p className="text-muted-foreground mb-2">
+          For the privacy of our families, the member directory is visible only to administrators
+          and members granted access.
+        </p>
+        <p className="text-muted-foreground mb-6">
+          Please contact a Samaj administrator to request access.
+        </p>
+        <Button asChild variant="outline">
+          <Link to="/">← Back to home</Link>
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="container py-12 md:py-16 max-w-6xl">
@@ -58,6 +113,9 @@ const Directory = () => {
         </h1>
         <div className="w-24 h-1 bg-gradient-gold mx-auto rounded-full mb-4" />
         <p className="text-muted-foreground max-w-2xl mx-auto">{t("directory.subtitle")}</p>
+        <p className="text-xs text-muted-foreground mt-2 inline-flex items-center gap-1.5">
+          <Lock className="h-3 w-3" /> Private — visible only to authorised members
+        </p>
       </header>
 
       <div className="relative max-w-xl mx-auto mb-8">

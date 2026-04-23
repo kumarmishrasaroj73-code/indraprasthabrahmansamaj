@@ -138,14 +138,6 @@ const Auth = () => {
             </Button>
           </form>
 
-          <TabsContent value="signup">
-            <p className="text-xs text-muted-foreground text-center mt-4">
-              {t(
-                "auth.adminNote",
-                "Tip: signing up with admin@indraprasthbrahmansamaj.org grants admin access automatically."
-              )}
-            </p>
-          </TabsContent>
         </Tabs>
 
         <p className="text-center text-sm text-muted-foreground mt-6">

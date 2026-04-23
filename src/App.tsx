@@ -17,6 +17,7 @@ import Events from "./pages/Events";
 import Gallery from "./pages/Gallery";
 import Register from "./pages/Register";
 import Chat from "./pages/Chat";
+import Meetings from "./pages/Meetings";
 import Auth from "./pages/Auth";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminOverview from "./pages/admin/AdminOverview";
@@ -26,9 +27,11 @@ import AdminIntro from "./pages/admin/AdminIntro";
 import AdminMembers from "./pages/admin/AdminMembers";
 import AdminMatrimonial from "./pages/admin/AdminMatrimonial";
 import AdminEvents from "./pages/admin/AdminEvents";
+import AdminMeetings from "./pages/admin/AdminMeetings";
 import AdminGallery from "./pages/admin/AdminGallery";
 import AdminRegistrations from "./pages/admin/AdminRegistrations";
 import AdminDonations from "./pages/admin/AdminDonations";
+import AdminDirectoryAccess from "./pages/admin/AdminDirectoryAccess";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -51,6 +54,7 @@ const App = () => (
               <Route path="/matrimonial" element={<Matrimonial />} />
               <Route path="/events" element={<Events />} />
               <Route path="/gallery" element={<Gallery />} />
+              <Route path="/meetings" element={<Meetings />} />
               <Route path="/register" element={<Register />} />
               <Route path="/chat" element={<Chat />} />
             </Route>
@@ -68,8 +72,10 @@ const App = () => (
               <Route path="notices" element={<AdminNotices />} />
               <Route path="intro" element={<AdminIntro />} />
               <Route path="members" element={<AdminMembers />} />
+              <Route path="directory-access" element={<AdminDirectoryAccess />} />
               <Route path="matrimonial" element={<AdminMatrimonial />} />
               <Route path="events" element={<AdminEvents />} />
+              <Route path="meetings" element={<AdminMeetings />} />
               <Route path="gallery" element={<AdminGallery />} />
               <Route path="registrations" element={<AdminRegistrations />} />
               <Route path="donations" element={<AdminDonations />} />

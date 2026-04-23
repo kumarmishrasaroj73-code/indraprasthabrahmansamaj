@@ -3,11 +3,12 @@ import { Navigate } from "react-router-dom";
 import {
   MessageCircle, Search, Plus, ArrowLeft, Send, Check, CheckCheck, Users, Smile,
   Paperclip, Mic, X, Reply, Trash2, Star, Pin, Copy, Image as ImageIcon, FileText, Play, Pause, Download, MoreVertical, StarOff,
-  BarChart3, Megaphone, Info,
+  BarChart3, Megaphone, Info, Phone, Video as VideoIcon,
 } from "lucide-react";
 import { PollCard, type Poll } from "@/components/chat/PollCard";
 import { CreatePollDialog } from "@/components/chat/CreatePollDialog";
 import { GroupInfoDialog } from "@/components/chat/GroupInfoDialog";
+import { CallDialog, triggerCall } from "@/components/chat/CallDialog";
 import { Switch } from "@/components/ui/switch";
 import EmojiPicker, { EmojiClickData, Theme } from "emoji-picker-react";
 import { format, isToday, isYesterday, isSameDay, formatDistanceToNow } from "date-fns";
@@ -434,6 +435,28 @@ const ChatWindow = ({
             </p>
           </div>
         </button>
+        {!isBroadcast && (conversation.participants?.length ?? 0) > 1 && (
+          <>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-primary-foreground hover:bg-primary-foreground/10"
+              onClick={() => triggerCall(conversation.id, "voice")}
+              title="Voice call"
+            >
+              <Phone className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-primary-foreground hover:bg-primary-foreground/10"
+              onClick={() => triggerCall(conversation.id, "video")}
+              title="Video call"
+            >
+              <VideoIcon className="h-5 w-5" />
+            </Button>
+          </>
+        )}
         <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-foreground/10" onClick={() => setShowSearch((v) => !v)}>
           <Search className="h-5 w-5" />
         </Button>
@@ -656,7 +679,12 @@ const ChatWindow = ({
 
       <CreatePollDialog open={showCreatePoll} setOpen={setShowCreatePoll} conversationId={conversation.id} userId={userId} />
       <GroupInfoDialog open={showGroupInfo} setOpen={setShowGroupInfo} conversation={conversation} userId={userId} onChanged={() => { onUpdated(); }} />
-
+      <CallDialog
+        conversationId={conversation.id}
+        userId={userId}
+        participantIds={(conversation.participants ?? []).map((p) => p.user_id).filter((id) => id !== userId)}
+        conversationName={conversation.displayName}
+      />
 
       {/* Pinned dialog */}
       <Dialog open={showPinned} onOpenChange={setShowPinned}>
