@@ -217,10 +217,7 @@ export const CallDialog = ({
       if (remoteAudioRef.current) remoteAudioRef.current.srcObject = stream;
     };
     pc.onconnectionstatechange = () => {
-      if (
-        pc.connectionState === "connected" ||
-        pc.connectionState === "completed"
-      ) {
+      if (pc.connectionState === "connected") {
         setState("active");
         if (!timerRef.current) {
           timerRef.current = window.setInterval(() => setDuration((d) => d + 1), 1000);

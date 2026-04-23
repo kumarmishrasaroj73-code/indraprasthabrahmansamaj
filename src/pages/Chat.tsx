@@ -8,6 +8,7 @@ import {
 import { PollCard, type Poll } from "@/components/chat/PollCard";
 import { CreatePollDialog } from "@/components/chat/CreatePollDialog";
 import { GroupInfoDialog } from "@/components/chat/GroupInfoDialog";
+import { CallDialog, triggerCall } from "@/components/chat/CallDialog";
 import { Switch } from "@/components/ui/switch";
 import EmojiPicker, { EmojiClickData, Theme } from "emoji-picker-react";
 import { format, isToday, isYesterday, isSameDay, formatDistanceToNow } from "date-fns";
