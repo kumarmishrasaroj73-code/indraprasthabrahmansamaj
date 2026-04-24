@@ -4,6 +4,7 @@ import { FileText, Download, Calendar, Gavel, Users, ScrollText, Scale } from "l
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { TText } from "@/components/TText";
 import { supabase } from "@/integrations/supabase/client";
 
 type Category = "meeting" | "circular" | "decision" | "legal";
@@ -98,9 +99,9 @@ const Notices = () => {
                     </span>
                   </div>
                   <h3 className="font-serif text-lg md:text-xl font-semibold text-secondary mb-1">
-                    {n.title}
+                    <TText>{n.title}</TText>
                   </h3>
-                  <p className="text-sm text-muted-foreground">{n.description}</p>
+                  <TText as="p" className="text-sm text-muted-foreground">{n.description}</TText>
                 </div>
                 {n.attachment_url && (
                   <Button asChild variant="outline" size="sm" className="border-primary/50 text-primary hover:bg-primary hover:text-primary-foreground self-start md:self-center">
