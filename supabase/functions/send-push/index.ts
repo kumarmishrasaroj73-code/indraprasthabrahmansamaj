@@ -1,7 +1,7 @@
 // Sends a Web Push notification (VAPID) to all of a user's saved subscriptions.
 // Body: { user_id: string, title: string, body?: string, link?: string }
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
-import webpush from "npm:web-push@3.6.7";
+import webpush from "web-push";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
