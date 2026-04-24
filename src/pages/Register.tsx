@@ -50,6 +50,24 @@ const Register = () => {
       toast({ title: "Submission failed", description: error.message, variant: "destructive" });
       return;
     }
+    // Email admins (best-effort, ignore failures)
+    supabase.functions
+      .invoke("notify-admins-email", {
+        body: {
+          subject: `New member registration: ${payload.full_name}`,
+          html: `
+            <h2 style="font-family:Georgia,serif;color:#7c2d12">New member registration</h2>
+            <p><b>Name:</b> ${payload.full_name}</p>
+            ${payload.gotra ? `<p><b>Gotra:</b> ${payload.gotra}</p>` : ""}
+            ${payload.city ? `<p><b>City:</b> ${payload.city}</p>` : ""}
+            ${payload.phone ? `<p><b>Phone:</b> ${payload.phone}</p>` : ""}
+            ${payload.email ? `<p><b>Email:</b> ${payload.email}</p>` : ""}
+            ${payload.message ? `<p><b>Message:</b><br/>${String(payload.message).replace(/\n/g,"<br/>")}</p>` : ""}
+            <p style="margin-top:16px"><a href="https://indraprasthbrahmansamaj.org/admin/registrations">Review in admin panel →</a></p>
+          `,
+        },
+      })
+      .catch(() => {});
     setDone(true);
   };
 

@@ -3,6 +3,7 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Menu, X } from "lucide-react";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { NotificationBell } from "./NotificationBell";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.jpg";
 
@@ -64,7 +65,8 @@ export const Header = () => {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
+          <NotificationBell />
           <LanguageSwitcher />
           <Button
             variant="ghost"
