@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Bell, AlertTriangle, Calendar } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { TText } from "@/components/TText";
 import { supabase } from "@/integrations/supabase/client";
 
 type Announcement = {
@@ -75,9 +76,9 @@ const Announcements = () => {
                   </span>
                 </div>
                 <h2 className="font-serif text-xl md:text-2xl font-bold text-secondary mb-2">
-                  {a.title}
+                  <TText>{a.title}</TText>
                 </h2>
-                <p className="text-muted-foreground leading-relaxed">{a.description}</p>
+                <TText as="p" className="text-muted-foreground leading-relaxed">{a.description}</TText>
               </div>
             </div>
           </Card>
