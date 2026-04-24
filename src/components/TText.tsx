@@ -14,6 +14,6 @@ interface TTextProps {
  */
 export const TText = ({ children, as: Tag = "span", className }: TTextProps) => {
   const translated = useAutoTranslate(children ?? "");
-  // @ts-expect-error – dynamic tag
-  return <Tag className={className}>{translated}</Tag>;
+  const Component = Tag as any;
+  return <Component className={className}>{translated}</Component>;
 };
