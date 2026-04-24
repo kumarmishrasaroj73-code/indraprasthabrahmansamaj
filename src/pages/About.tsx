@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BookOpen, Compass, Eye, Heart, GraduationCap, HandHeart, Users } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { TText } from "@/components/TText";
 import { supabase } from "@/integrations/supabase/client";
 import i18n from "@/i18n";
 
@@ -85,11 +84,9 @@ const About = () => {
             <Card key={s.id} className={`p-8 md:p-10 ${style}`}>
               <div className="flex items-center gap-3 mb-3">
                 <Icon className="h-5 w-5 text-primary" />
-                <h2 className="font-serif text-2xl font-bold text-secondary">
-                  <TText>{s.title}</TText>
-                </h2>
+                <h2 className="font-serif text-2xl font-bold text-secondary">{s.title}</h2>
               </div>
-              <TText as="p" className="text-muted-foreground leading-relaxed whitespace-pre-line">{s.body}</TText>
+              <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{s.body}</p>
             </Card>
           );
         })}

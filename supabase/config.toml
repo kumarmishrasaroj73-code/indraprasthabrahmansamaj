@@ -3,6 +3,3 @@ project_id = "hpaztudjyrzbtndbdvfo"
 [functions.send-push]
 verify_jwt = false
 import_map = "./supabase/functions/send-push/deno.json"
-
-[functions.translate]
-verify_jwt = false
