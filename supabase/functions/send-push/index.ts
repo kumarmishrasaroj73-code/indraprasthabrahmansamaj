@@ -2,8 +2,8 @@
 // Body: { user_id: string, title: string, body?: string, link?: string }
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.45.0/cors";
-// @ts-ignore - npm specifier resolves at deploy
-import webpush from "npm:web-push@3.6.7";
+// @ts-ignore - resolved via deno.json import map
+import webpush from "web-push";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
