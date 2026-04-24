@@ -1,7 +1,9 @@
 // Sends an email to configured admin recipients via Resend (gateway).
-// Triggered from the client when a new member registration or matrimonial
-// profile is submitted.
-import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.45.0/cors";
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+};
 
 const GATEWAY_URL = "https://connector-gateway.lovable.dev/resend";
 

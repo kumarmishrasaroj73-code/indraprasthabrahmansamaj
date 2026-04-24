@@ -1,9 +1,13 @@
 // Sends a Web Push notification (VAPID) to all of a user's saved subscriptions.
 // Body: { user_id: string, title: string, body?: string, link?: string }
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
-import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.45.0/cors";
-// @ts-ignore - resolved via deno.json import map
-import webpush from "web-push";
+import webpush from "npm:web-push@3.6.7";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+};
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
@@ -21,7 +25,7 @@ Deno.serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    webpush.setVapidDetails(SUBJ, PUB, PRIV);
+    (webpush as any).setVapidDetails(SUBJ, PUB, PRIV);
 
     const { user_id, title, body, link } = await req.json();
     if (!user_id || !title) {
@@ -41,14 +45,13 @@ Deno.serve(async (req) => {
     const payload = JSON.stringify({ title, body: body ?? "", link: link ?? "/" });
     const results = await Promise.allSettled(
       (subs ?? []).map((s) =>
-        webpush.sendNotification(
+        (webpush as any).sendNotification(
           { endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } },
           payload
         )
       )
     );
 
-    // Cleanup expired subscriptions
     const dead: string[] = [];
     results.forEach((r, i) => {
       if (r.status === "rejected") {
