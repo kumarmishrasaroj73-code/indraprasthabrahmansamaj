@@ -283,9 +283,33 @@ const resources: Record<string, { translation: typeof en }> = {
   sa: { translation: sa },
 };
 
+// For all other languages we register an empty bundle so i18next treats them
+// as supported. Missing keys will trigger our AI-backed parseMissingKeyHandler
+// below, which falls back to the English string and queues a translation.
 LANGUAGES.forEach((l) => {
-  if (!resources[l.code]) resources[l.code] = { translation: en };
+  if (!resources[l.code]) resources[l.code] = { translation: {} as typeof en };
 });
+
+// Lazy import to avoid circular deps at module init
+let translatorPromise: Promise<typeof import("./translator")> | null = null;
+const getTranslator = () => {
+  if (!translatorPromise) translatorPromise = import("./translator");
+  return translatorPromise;
+};
+
+// Resolve a key against the English bundle
+function resolveEnglish(key: string): string | undefined {
+  const parts = key.split(".");
+  let cur: any = en;
+  for (const p of parts) {
+    if (cur && typeof cur === "object" && p in cur) cur = cur[p];
+    else return undefined;
+  }
+  return typeof cur === "string" ? cur : undefined;
+}
+
+// In-memory map of resolved AI translations to inject back into i18next
+const injected = new Set<string>(); // `${lng}::${key}`
 
 i18n
   .use(LanguageDetector)
@@ -296,6 +320,27 @@ i18n
     supportedLngs: LANGUAGES.map((l) => l.code),
     interpolation: { escapeValue: false },
     detection: { order: ["localStorage", "navigator"], caches: ["localStorage"] },
+    saveMissing: false,
+    parseMissingKeyHandler: (key, defaultValue) => {
+      const lng = i18n.language;
+      const fallback = resolveEnglish(key) ?? defaultValue ?? key;
+      if (!lng || lng === "en" || lng === "hi" || lng === "sa") return fallback;
+      const tag = `${lng}::${key}`;
+      if (injected.has(tag)) return fallback;
+      injected.add(tag);
+      // Fire and forget — when AI returns, inject into bundle and notify React
+      getTranslator().then(({ translateText }) => {
+        translateText(fallback, lng).then((tr) => {
+          if (!tr || tr === fallback) return;
+          // Add to i18next resource bundle
+          i18n.addResource(lng, "translation", key, tr);
+          // Trigger re-render in components using useTranslation
+          i18n.emit("languageChanged", lng);
+        }).catch(() => { /* ignore */ });
+      });
+      return fallback;
+    },
   });
 
 export default i18n;
+
