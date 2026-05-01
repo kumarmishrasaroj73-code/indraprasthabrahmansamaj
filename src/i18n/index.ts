@@ -23,12 +23,12 @@ const en = {
   },
   brand: {
     name: "Indraprastha Brahman Samaj (Regd.)",
-    tagline: "Heritage • Harmony • Humanity",
+    tagline: "Dharma • Awareness • Unity",
   },
   hero: {
     welcome: "Welcome to",
-    subtitle: "A united community preserving our timeless traditions while embracing a vibrant modern future together.",
-    ctaAbout: "Discover Our Story",
+    subtitle: "Born from a small group of like-minded Brahman families, Indraprastha Brahman Samaj today unites generations on one strong platform — devoted to Sanatan Dharma, Vedic tradition, and social harmony.",
+    ctaAbout: "Read More",
     ctaDonate: "Support the Samaj",
   },
   home: {
@@ -148,11 +148,11 @@ const en = {
 
 const hi: typeof en = {
   nav: { home: "मुख्य पृष्ठ", about: "परिचय", announcements: "घोषणाएँ", notices: "सूचना पट", events: "कार्यक्रम", gallery: "गैलरी", donate: "दान करें", directory: "निर्देशिका", matrimonial: "विवाह", register: "सदस्यता लें", chat: "चैट" },
-  brand: { name: "इंद्रप्रस्थ ब्राह्मण समाज (पंजीकृत)", tagline: "विरासत • सद्भाव • मानवता" },
+  brand: { name: "इंद्रप्रस्थ ब्राह्मण समाज (पंजीकृत)", tagline: "धर्म • जागरूकता • एकता" },
   hero: {
     welcome: "स्वागत है",
-    subtitle: "एक एकजुट समुदाय जो अपनी कालातीत परंपराओं को संजोए हुए एक उज्ज्वल आधुनिक भविष्य की ओर अग्रसर है।",
-    ctaAbout: "हमारी कहानी जानें",
+    subtitle: "समान विचारधारा वाले परिवारों से आरंभ हुआ इंद्रप्रस्थ ब्राह्मण समाज आज पीढ़ियों को जोड़ने वाला एक सशक्त मंच है — सनातन धर्म, वैदिक परंपरा एवं समरसता के संवर्धन हेतु समर्पित।",
+    ctaAbout: "और पढ़ें",
     ctaDonate: "समाज को सहयोग दें",
   },
   home: {

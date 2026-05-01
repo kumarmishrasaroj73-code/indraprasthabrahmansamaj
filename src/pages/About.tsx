@@ -71,8 +71,11 @@ const About = () => {
       <header className="text-center mb-12">
         <div className="font-sanskrit text-3xl text-accent mb-2">॥ श्री गणेशाय नमः ॥</div>
         <h1 className="font-serif text-4xl md:text-5xl font-bold text-secondary mb-3">
-          {t("about.title")}
+          संस्था की प्रेरणा एवं आधार
         </h1>
+        <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto mb-4">
+          {t("about.title")}
+        </p>
         <div className="w-24 h-1 bg-gradient-gold mx-auto rounded-full" />
       </header>
 
