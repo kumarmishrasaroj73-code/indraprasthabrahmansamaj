@@ -21,8 +21,11 @@ export const DonorWall = () => {
 
   useEffect(() => {
     // Use the public, anonymised view — donor names are masked server-side when anonymous.
-    supabase.from("donations_public" as any).select("*").order("donated_on", { ascending: false }).limit(60)
-      .then(({ data }) => { setItems((data as Donation[]) ?? []); setLoading(false); });
+    (supabase.from as any)("donations_public").select("*").order("donated_on", { ascending: false }).limit(60)
+      .then(({ data }: { data: Donation[] | null }) => {
+        setItems(data ?? []);
+        setLoading(false);
+      });
   }, []);
 
   const total = items.reduce((s, d) => s + Number(d.amount), 0);
