@@ -658,6 +658,57 @@ export type Database = {
         }
         Relationships: []
       }
+      matrimonial_contact_requests: {
+        Row: {
+          created_at: string
+          id: string
+          message: string | null
+          profile_id: string
+          requester_id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message?: string | null
+          profile_id: string
+          requester_id: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string | null
+          profile_id?: string
+          requester_id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "matrimonial_contact_requests_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "matrimonial_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "matrimonial_contact_requests_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "matrimonial_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       matrimonial_profiles: {
         Row: {
           about: string | null
@@ -1074,7 +1125,93 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      donations_public: {
+        Row: {
+          amount: number | null
+          created_at: string | null
+          currency: string | null
+          donated_on: string | null
+          donor_name: string | null
+          id: string | null
+          is_anonymous: boolean | null
+          message: string | null
+          method: string | null
+        }
+        Insert: {
+          amount?: number | null
+          created_at?: string | null
+          currency?: string | null
+          donated_on?: string | null
+          donor_name?: never
+          id?: string | null
+          is_anonymous?: boolean | null
+          message?: string | null
+          method?: string | null
+        }
+        Update: {
+          amount?: number | null
+          created_at?: string | null
+          currency?: string | null
+          donated_on?: string | null
+          donor_name?: never
+          id?: string | null
+          is_anonymous?: boolean | null
+          message?: string | null
+          method?: string | null
+        }
+        Relationships: []
+      }
+      matrimonial_public: {
+        Row: {
+          about: string | null
+          age: number | null
+          city: string | null
+          created_at: string | null
+          education: string | null
+          full_name: string | null
+          gender: string | null
+          gotra: string | null
+          height_cm: number | null
+          id: string | null
+          income_range: string | null
+          marital_status: string | null
+          photo_url: string | null
+          profession: string | null
+        }
+        Insert: {
+          about?: string | null
+          age?: never
+          city?: string | null
+          created_at?: string | null
+          education?: string | null
+          full_name?: string | null
+          gender?: string | null
+          gotra?: string | null
+          height_cm?: number | null
+          id?: string | null
+          income_range?: string | null
+          marital_status?: string | null
+          photo_url?: string | null
+          profession?: string | null
+        }
+        Update: {
+          about?: string | null
+          age?: never
+          city?: string | null
+          created_at?: string | null
+          education?: string | null
+          full_name?: string | null
+          gender?: string | null
+          gotra?: string | null
+          height_cm?: number | null
+          id?: string | null
+          income_range?: string | null
+          marital_status?: string | null
+          photo_url?: string | null
+          profession?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       can_view_directory: { Args: { _user_id: string }; Returns: boolean }
