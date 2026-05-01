@@ -20,7 +20,8 @@ export const DonorWall = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.from("donations").select("*").order("donated_on", { ascending: false }).limit(60)
+    // Use the public, anonymised view — donor names are masked server-side when anonymous.
+    supabase.from("donations_public" as any).select("*").order("donated_on", { ascending: false }).limit(60)
       .then(({ data }) => { setItems((data as Donation[]) ?? []); setLoading(false); });
   }, []);
 
