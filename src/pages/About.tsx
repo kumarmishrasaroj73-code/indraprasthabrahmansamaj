@@ -71,25 +71,54 @@ const About = () => {
       <header className="text-center mb-12">
         <div className="font-sanskrit text-3xl text-accent mb-2">॥ श्री गणेशाय नमः ॥</div>
         <h1 className="font-serif text-4xl md:text-5xl font-bold text-secondary mb-3">
-          {t("about.title")}
+          संस्था की प्रेरणा एवं आधार
         </h1>
+        <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto mb-4">
+          {t("about.title")}
+        </p>
         <div className="w-24 h-1 bg-gradient-gold mx-auto rounded-full" />
       </header>
 
+      {/* About + History (foundational text) */}
       <div className="space-y-6 mb-8">
-        {sections.map((s) => {
-          const Icon = sectionIcons[s.section_key] ?? Heart;
-          const style = sectionStyles[s.section_key] ?? "border-accent/30";
-          return (
-            <Card key={s.id} className={`p-8 md:p-10 ${style}`}>
-              <div className="flex items-center gap-3 mb-3">
-                <Icon className="h-5 w-5 text-primary" />
-                <h2 className="font-serif text-2xl font-bold text-secondary">{s.title}</h2>
-              </div>
-              <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{s.body}</p>
-            </Card>
-          );
-        })}
+        {sections
+          .filter((s) => s.section_key === "about" || s.section_key === "history")
+          .map((s) => {
+            const Icon = sectionIcons[s.section_key] ?? Heart;
+            const style = sectionStyles[s.section_key] ?? "border-accent/30";
+            return (
+              <Card key={s.id} className={`p-8 md:p-10 ${style}`}>
+                <div className="flex items-center gap-3 mb-4">
+                  <Icon className="h-5 w-5 text-primary" />
+                  <h2 className="font-serif text-2xl font-bold text-secondary">{s.title}</h2>
+                </div>
+                <p className="text-foreground/80 leading-relaxed whitespace-pre-line">{s.body}</p>
+              </Card>
+            );
+          })}
+      </div>
+
+      {/* Mission + Vision side-by-side cards */}
+      <div className="grid gap-6 md:grid-cols-2 mb-12">
+        {sections
+          .filter((s) => s.section_key === "mission" || s.section_key === "vision")
+          .map((s) => {
+            const Icon = sectionIcons[s.section_key] ?? Heart;
+            return (
+              <Card
+                key={s.id}
+                className="p-8 border-2 border-accent/40 bg-gradient-warm transition-smooth hover:shadow-warm hover:-translate-y-1"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-full bg-gradient-saffron flex items-center justify-center shadow-warm">
+                    <Icon className="h-5 w-5 text-primary-foreground" />
+                  </div>
+                  <h2 className="font-serif text-2xl font-bold text-secondary">{s.title}</h2>
+                </div>
+                <p className="text-foreground/80 leading-relaxed whitespace-pre-line">{s.body}</p>
+              </Card>
+            );
+          })}
       </div>
 
       <section>
