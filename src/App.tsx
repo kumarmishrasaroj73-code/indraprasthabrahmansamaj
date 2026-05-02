@@ -18,6 +18,8 @@ import Gallery from "./pages/Gallery";
 import Register from "./pages/Register";
 import Chat from "./pages/Chat";
 import Meetings from "./pages/Meetings";
+import Community from "./pages/Community";
+import Profile from "./pages/Profile";
 import Auth from "./pages/Auth";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminOverview from "./pages/admin/AdminOverview";
@@ -57,6 +59,9 @@ const App = () => (
               <Route path="/meetings" element={<Meetings />} />
               <Route path="/register" element={<Register />} />
               <Route path="/chat" element={<Chat />} />
+              <Route path="/community" element={<Community />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/profile/:userId" element={<Profile />} />
             </Route>
             <Route path="/auth" element={<Auth />} />
             <Route

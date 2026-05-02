@@ -17,6 +17,7 @@ export const Header = () => {
     { to: "/about", label: t("nav.about") },
     { to: "/announcements", label: t("nav.announcements") },
     { to: "/notices", label: t("nav.notices") },
+    { to: "/community", label: t("nav.community", "Community") },
     { to: "/events", label: t("nav.events") },
     { to: "/meetings", label: t("nav.meetings", "Meetings") },
     { to: "/gallery", label: t("nav.gallery") },
