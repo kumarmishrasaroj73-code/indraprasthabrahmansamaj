@@ -289,7 +289,12 @@ const Matrimonial = () => {
               </Badge>
             </div>
             <div className="p-5 flex-1 flex flex-col">
-              <h3 className="font-serif text-xl font-bold text-secondary">{p.full_name}</h3>
+              <h3 className="font-serif text-xl font-bold text-secondary inline-flex items-center gap-1.5">
+                {p.full_name}
+                {p.photo_url && (
+                  <BadgeCheck className="h-4 w-4 text-primary" aria-label="Verified profile" />
+                )}
+              </h3>
               <div className="flex flex-wrap gap-3 mt-1 text-xs text-muted-foreground">
                 {p.age !== null && (
                   <span className="inline-flex items-center gap-1"><Cake className="h-3 w-3" /> {p.age} {t("matrimonial.years")}</span>
