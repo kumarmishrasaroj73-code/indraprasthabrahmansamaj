@@ -14,6 +14,7 @@ import Donate from "./pages/Donate";
 import Directory from "./pages/Directory";
 import Matrimonial from "./pages/Matrimonial";
 import Events from "./pages/Events";
+import Cultural from "./pages/Cultural";
 import Gallery from "./pages/Gallery";
 import Register from "./pages/Register";
 import Chat from "./pages/Chat";
@@ -55,6 +56,8 @@ const App = () => (
               <Route path="/directory" element={<Directory />} />
               <Route path="/matrimonial" element={<Matrimonial />} />
               <Route path="/events" element={<Events />} />
+              <Route path="/events/cultural" element={<Cultural />} />
+              <Route path="/cultural" element={<Cultural />} />
               <Route path="/gallery" element={<Gallery />} />
               <Route path="/meetings" element={<Meetings />} />
               <Route path="/register" element={<Register />} />

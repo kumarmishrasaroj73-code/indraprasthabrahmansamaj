@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Calendar as CalIcon, MapPin, Users, Check } from "lucide-react";
+import { Calendar as CalIcon, MapPin, Users, Check, Sparkles } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -118,6 +118,13 @@ const Events = () => {
         <h1 className="font-serif text-4xl md:text-5xl font-bold text-secondary mb-3">{t("events.title")}</h1>
         <div className="w-24 h-1 bg-gradient-gold mx-auto rounded-full mb-4" />
         <p className="text-muted-foreground max-w-2xl mx-auto">{t("events.subtitle")}</p>
+        <div className="mt-5">
+          <Button asChild variant="outline" className="border-primary/30 text-primary hover:bg-primary/10">
+            <Link to="/events/cultural">
+              <Sparkles className="h-4 w-4 mr-2" /> Utsav · Panchang, Festivals & Shlokas
+            </Link>
+          </Button>
+        </div>
       </header>
 
       {loading && <p className="text-center text-muted-foreground py-12">Loading…</p>}
