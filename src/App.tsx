@@ -14,6 +14,7 @@ import Donate from "./pages/Donate";
 import Directory from "./pages/Directory";
 import Matrimonial from "./pages/Matrimonial";
 import Events from "./pages/Events";
+import Cultural from "./pages/Cultural";
 import Gallery from "./pages/Gallery";
 import Register from "./pages/Register";
 import Chat from "./pages/Chat";
