@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Heart, Search, MapPin, Briefcase, GraduationCap, Cake, Ruler, Lock, Send } from "lucide-react";
+import { Heart, Search, MapPin, Briefcase, GraduationCap, Cake, Ruler, Lock, Send, SlidersHorizontal, X, BadgeCheck } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -48,6 +48,13 @@ const Matrimonial = () => {
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState("");
   const [gender, setGender] = useState<string>("all");
+  const [gotra, setGotra] = useState<string>("all");
+  const [city, setCity] = useState<string>("all");
+  const [profession, setProfession] = useState<string>("all");
+  const [education, setEducation] = useState<string>("all");
+  const [ageMin, setAgeMin] = useState<string>("");
+  const [ageMax, setAgeMax] = useState<string>("");
+  const [showFilters, setShowFilters] = useState(false);
 
   const [requestProfile, setRequestProfile] = useState<Profile | null>(null);
   const [message, setMessage] = useState("");
@@ -64,16 +71,53 @@ const Matrimonial = () => {
       });
   }, []);
 
+  const uniq = (key: keyof Profile) =>
+    Array.from(
+      new Set(
+        items
+          .map((p) => (p[key] ?? "") as string)
+          .filter((v) => v && v.trim().length),
+      ),
+    ).sort();
+
+  const gotras = useMemo(() => uniq("gotra"), [items]);
+  const cities = useMemo(() => uniq("city"), [items]);
+  const professions = useMemo(() => uniq("profession"), [items]);
+  const educations = useMemo(() => uniq("education"), [items]);
+
   const filtered = useMemo(() => {
     const s = q.trim().toLowerCase();
+    const minA = ageMin ? parseInt(ageMin, 10) : null;
+    const maxA = ageMax ? parseInt(ageMax, 10) : null;
     return items.filter((p) => {
       if (gender !== "all" && p.gender !== gender) return false;
+      if (gotra !== "all" && p.gotra !== gotra) return false;
+      if (city !== "all" && p.city !== city) return false;
+      if (profession !== "all" && p.profession !== profession) return false;
+      if (education !== "all" && p.education !== education) return false;
+      if (minA !== null && (p.age === null || p.age < minA)) return false;
+      if (maxA !== null && (p.age === null || p.age > maxA)) return false;
       if (!s) return true;
       return [p.full_name, p.gotra, p.profession, p.education, p.city, p.about]
         .filter(Boolean)
         .some((v) => (v as string).toLowerCase().includes(s));
     });
-  }, [items, q, gender]);
+  }, [items, q, gender, gotra, city, profession, education, ageMin, ageMax]);
+
+  const activeFilterCount =
+    (gender !== "all" ? 1 : 0) +
+    (gotra !== "all" ? 1 : 0) +
+    (city !== "all" ? 1 : 0) +
+    (profession !== "all" ? 1 : 0) +
+    (education !== "all" ? 1 : 0) +
+    (ageMin ? 1 : 0) +
+    (ageMax ? 1 : 0);
+
+  const clearFilters = () => {
+    setGender("all"); setGotra("all"); setCity("all");
+    setProfession("all"); setEducation("all");
+    setAgeMin(""); setAgeMax("");
+  };
 
   const openRequest = (p: Profile) => {
     if (!user) {
@@ -141,7 +185,7 @@ const Matrimonial = () => {
         </p>
       </header>
 
-      <div className="grid gap-3 sm:grid-cols-[1fr_180px] max-w-2xl mx-auto mb-8">
+      <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto] max-w-3xl mx-auto mb-4">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -152,16 +196,77 @@ const Matrimonial = () => {
             maxLength={120}
           />
         </div>
-        <Select value={gender} onValueChange={setGender}>
-          <SelectTrigger><SelectValue /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">{t("matrimonial.allGenders")}</SelectItem>
-            <SelectItem value="male">{t("matrimonial.male")}</SelectItem>
-            <SelectItem value="female">{t("matrimonial.female")}</SelectItem>
-            <SelectItem value="other">{t("matrimonial.other")}</SelectItem>
-          </SelectContent>
-        </Select>
+        <Button
+          variant="outline"
+          onClick={() => setShowFilters((v) => !v)}
+          className="border-accent/40 gap-2"
+        >
+          <SlidersHorizontal className="h-4 w-4" />
+          Filters
+          {activeFilterCount > 0 && (
+            <Badge className="ml-1 bg-primary text-primary-foreground h-5 min-w-5 px-1.5">
+              {activeFilterCount}
+            </Badge>
+          )}
+        </Button>
+        {activeFilterCount > 0 && (
+          <Button variant="ghost" onClick={clearFilters} className="gap-1 text-muted-foreground">
+            <X className="h-4 w-4" /> Clear
+          </Button>
+        )}
       </div>
+
+      {showFilters && (
+        <Card className="max-w-3xl mx-auto mb-8 p-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 border-accent/30">
+          <Select value={gender} onValueChange={setGender}>
+            <SelectTrigger><SelectValue placeholder="Gender" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t("matrimonial.allGenders")}</SelectItem>
+              <SelectItem value="male">{t("matrimonial.male")}</SelectItem>
+              <SelectItem value="female">{t("matrimonial.female")}</SelectItem>
+              <SelectItem value="other">{t("matrimonial.other")}</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={gotra} onValueChange={setGotra}>
+            <SelectTrigger><SelectValue placeholder="Gotra" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Gotras</SelectItem>
+              {gotras.map((g) => <SelectItem key={g} value={g}>{g}</SelectItem>)}
+            </SelectContent>
+          </Select>
+          <Select value={city} onValueChange={setCity}>
+            <SelectTrigger><SelectValue placeholder="City" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Cities</SelectItem>
+              {cities.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+            </SelectContent>
+          </Select>
+          <Select value={profession} onValueChange={setProfession}>
+            <SelectTrigger><SelectValue placeholder="Profession" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Professions</SelectItem>
+              {professions.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}
+            </SelectContent>
+          </Select>
+          <Select value={education} onValueChange={setEducation}>
+            <SelectTrigger><SelectValue placeholder="Education" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Education</SelectItem>
+              {educations.map((e) => <SelectItem key={e} value={e}>{e}</SelectItem>)}
+            </SelectContent>
+          </Select>
+          <div className="grid grid-cols-2 gap-2">
+            <Input
+              type="number" min={18} max={99} placeholder="Min age"
+              value={ageMin} onChange={(e) => setAgeMin(e.target.value)}
+            />
+            <Input
+              type="number" min={18} max={99} placeholder="Max age"
+              value={ageMax} onChange={(e) => setAgeMax(e.target.value)}
+            />
+          </div>
+        </Card>
+      )}
 
       {loading && <p className="text-center text-muted-foreground py-12">Loading…</p>}
       {!loading && filtered.length === 0 && (
@@ -184,7 +289,12 @@ const Matrimonial = () => {
               </Badge>
             </div>
             <div className="p-5 flex-1 flex flex-col">
-              <h3 className="font-serif text-xl font-bold text-secondary">{p.full_name}</h3>
+              <h3 className="font-serif text-xl font-bold text-secondary inline-flex items-center gap-1.5">
+                {p.full_name}
+                {p.photo_url && (
+                  <BadgeCheck className="h-4 w-4 text-primary" aria-label="Verified profile" />
+                )}
+              </h3>
               <div className="flex flex-wrap gap-3 mt-1 text-xs text-muted-foreground">
                 {p.age !== null && (
                   <span className="inline-flex items-center gap-1"><Cake className="h-3 w-3" /> {p.age} {t("matrimonial.years")}</span>
