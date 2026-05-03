@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Menu, X } from "lucide-react";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { NotificationBell } from "./NotificationBell";
+import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.jpg";
 
@@ -68,6 +69,7 @@ export const Header = () => {
 
         <div className="flex items-center gap-1">
           <NotificationBell />
+          <ThemeToggle />
           <LanguageSwitcher />
           <Button
             variant="ghost"
