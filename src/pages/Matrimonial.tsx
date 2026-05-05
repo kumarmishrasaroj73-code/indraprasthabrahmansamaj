@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Heart, Search, MapPin, Briefcase, GraduationCap, Cake, Ruler, Lock, Send, SlidersHorizontal, X, BadgeCheck } from "lucide-react";
+import { Heart, Search, MapPin, Briefcase, GraduationCap, Cake, Ruler, Lock, Send, SlidersHorizontal, X, BadgeCheck, Bookmark, BookmarkCheck } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -60,6 +60,9 @@ const Matrimonial = () => {
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  const [shortlist, setShortlist] = useState<Set<string>>(new Set());
+  const [showShortlistOnly, setShowShortlistOnly] = useState(false);
+
   useEffect(() => {
     // Public, sanitised view — no contact phone/email/DOB exposed.
     (supabase.from as any)("matrimonial_public")
@@ -70,6 +73,40 @@ const Matrimonial = () => {
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    if (!user) { setShortlist(new Set()); return; }
+    (supabase.from as any)("matrimonial_shortlist")
+      .select("profile_id")
+      .then(({ data }: { data: { profile_id: string }[] | null }) => {
+        setShortlist(new Set((data ?? []).map(r => r.profile_id)));
+      });
+  }, [user]);
+
+  const toggleShortlist = async (profileId: string) => {
+    if (!user) {
+      toast({ title: "Sign in required", description: "Please log in to save profiles." });
+      navigate("/auth");
+      return;
+    }
+    const isSaved = shortlist.has(profileId);
+    const next = new Set(shortlist);
+    if (isSaved) {
+      next.delete(profileId);
+      setShortlist(next);
+      await (supabase.from as any)("matrimonial_shortlist").delete().eq("profile_id", profileId).eq("user_id", user.id);
+    } else {
+      next.add(profileId);
+      setShortlist(next);
+      const { error } = await (supabase.from as any)("matrimonial_shortlist").insert({ profile_id: profileId, user_id: user.id });
+      if (error) {
+        next.delete(profileId);
+        setShortlist(new Set(next));
+        toast({ title: "Could not save", description: error.message, variant: "destructive" });
+      }
+    }
+  };
+
 
   const uniq = (key: keyof Profile) =>
     Array.from(
