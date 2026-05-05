@@ -127,6 +127,7 @@ const Matrimonial = () => {
     const minA = ageMin ? parseInt(ageMin, 10) : null;
     const maxA = ageMax ? parseInt(ageMax, 10) : null;
     return items.filter((p) => {
+      if (showShortlistOnly && !shortlist.has(p.id)) return false;
       if (gender !== "all" && p.gender !== gender) return false;
       if (gotra !== "all" && p.gotra !== gotra) return false;
       if (city !== "all" && p.city !== city) return false;
@@ -139,7 +140,7 @@ const Matrimonial = () => {
         .filter(Boolean)
         .some((v) => (v as string).toLowerCase().includes(s));
     });
-  }, [items, q, gender, gotra, city, profession, education, ageMin, ageMax]);
+  }, [items, q, gender, gotra, city, profession, education, ageMin, ageMax, showShortlistOnly, shortlist]);
 
   const activeFilterCount =
     (gender !== "all" ? 1 : 0) +
