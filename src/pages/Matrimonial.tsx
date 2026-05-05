@@ -364,14 +364,25 @@ const Matrimonial = () => {
                 )}
               </div>
               {p.about && <p className="text-sm text-muted-foreground mt-3 line-clamp-3">{p.about}</p>}
-              <div className="mt-auto pt-4">
+              <div className="mt-auto pt-4 flex gap-2">
                 <Button
                   size="sm"
                   variant="outline"
-                  className="w-full border-accent/50"
+                  className="flex-1 border-accent/50"
                   onClick={() => openRequest(p)}
                 >
                   <Send className="h-3.5 w-3.5 mr-2" /> Request Contact
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="border-accent/50 px-3"
+                  onClick={() => toggleShortlist(p.id)}
+                  aria-label={shortlist.has(p.id) ? "Remove from shortlist" : "Save to shortlist"}
+                >
+                  {shortlist.has(p.id)
+                    ? <BookmarkCheck className="h-4 w-4 text-primary" />
+                    : <Bookmark className="h-4 w-4" />}
                 </Button>
               </div>
             </div>
