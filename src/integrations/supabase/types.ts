@@ -405,6 +405,132 @@ export type Database = {
           },
         ]
       }
+      cultural_festivals: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          date: string
+          description_en: string | null
+          description_hi: string | null
+          display_order: number
+          id: string
+          is_published: boolean
+          name_en: string
+          name_hi: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          date: string
+          description_en?: string | null
+          description_hi?: string | null
+          display_order?: number
+          id?: string
+          is_published?: boolean
+          name_en: string
+          name_hi?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          date?: string
+          description_en?: string | null
+          description_hi?: string | null
+          display_order?: number
+          id?: string
+          is_published?: boolean
+          name_en?: string
+          name_hi?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      cultural_shlokas: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          display_order: number
+          id: string
+          is_published: boolean
+          meaning_en: string | null
+          meaning_hi: string | null
+          sanskrit: string
+          source: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          display_order?: number
+          id?: string
+          is_published?: boolean
+          meaning_en?: string | null
+          meaning_hi?: string | null
+          sanskrit: string
+          source?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          display_order?: number
+          id?: string
+          is_published?: boolean
+          meaning_en?: string | null
+          meaning_hi?: string | null
+          sanskrit?: string
+          source?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      cultural_temples: {
+        Row: {
+          address: string | null
+          city: string | null
+          created_at: string
+          created_by: string | null
+          deity_en: string | null
+          deity_hi: string | null
+          display_order: number
+          id: string
+          is_published: boolean
+          name_en: string
+          name_hi: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          created_by?: string | null
+          deity_en?: string | null
+          deity_hi?: string | null
+          display_order?: number
+          id?: string
+          is_published?: boolean
+          name_en: string
+          name_hi?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          created_by?: string | null
+          deity_en?: string | null
+          deity_hi?: string | null
+          display_order?: number
+          id?: string
+          is_published?: boolean
+          name_en?: string
+          name_hi?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       directory_access: {
         Row: {
           granted_at: string
@@ -796,6 +922,27 @@ export type Database = {
           photo_url?: string | null
           profession?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      matrimonial_shortlist: {
+        Row: {
+          created_at: string
+          id: string
+          profile_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          profile_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          profile_id?: string
+          user_id?: string
         }
         Relationships: []
       }
