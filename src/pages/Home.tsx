@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import hero from "@/assets/parshuram.jpg";
 import logo from "@/assets/logo.jpg";
 import { supabase } from "@/integrations/supabase/client";
+import { DailyShloka } from "@/components/DailyShloka";
 
 type Announcement = {
   id: string;
@@ -139,6 +140,11 @@ const Home = () => {
             </Card>
           ))}
         </div>
+      </section>
+
+      {/* Daily Shloka */}
+      <section className="container pb-4">
+        <DailyShloka />
       </section>
 
       {/* Quick Links */}

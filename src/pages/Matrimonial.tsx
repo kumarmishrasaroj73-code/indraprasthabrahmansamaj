@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Heart, Search, MapPin, Briefcase, GraduationCap, Cake, Ruler, Lock, Send, SlidersHorizontal, X, BadgeCheck } from "lucide-react";
+import { Heart, Search, MapPin, Briefcase, GraduationCap, Cake, Ruler, Lock, Send, SlidersHorizontal, X, BadgeCheck, Bookmark, BookmarkCheck } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -60,6 +60,9 @@ const Matrimonial = () => {
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  const [shortlist, setShortlist] = useState<Set<string>>(new Set());
+  const [showShortlistOnly, setShowShortlistOnly] = useState(false);
+
   useEffect(() => {
     // Public, sanitised view — no contact phone/email/DOB exposed.
     (supabase.from as any)("matrimonial_public")
@@ -70,6 +73,40 @@ const Matrimonial = () => {
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    if (!user) { setShortlist(new Set()); return; }
+    (supabase.from as any)("matrimonial_shortlist")
+      .select("profile_id")
+      .then(({ data }: { data: { profile_id: string }[] | null }) => {
+        setShortlist(new Set((data ?? []).map(r => r.profile_id)));
+      });
+  }, [user]);
+
+  const toggleShortlist = async (profileId: string) => {
+    if (!user) {
+      toast({ title: "Sign in required", description: "Please log in to save profiles." });
+      navigate("/auth");
+      return;
+    }
+    const isSaved = shortlist.has(profileId);
+    const next = new Set(shortlist);
+    if (isSaved) {
+      next.delete(profileId);
+      setShortlist(next);
+      await (supabase.from as any)("matrimonial_shortlist").delete().eq("profile_id", profileId).eq("user_id", user.id);
+    } else {
+      next.add(profileId);
+      setShortlist(next);
+      const { error } = await (supabase.from as any)("matrimonial_shortlist").insert({ profile_id: profileId, user_id: user.id });
+      if (error) {
+        next.delete(profileId);
+        setShortlist(new Set(next));
+        toast({ title: "Could not save", description: error.message, variant: "destructive" });
+      }
+    }
+  };
+
 
   const uniq = (key: keyof Profile) =>
     Array.from(
@@ -90,6 +127,7 @@ const Matrimonial = () => {
     const minA = ageMin ? parseInt(ageMin, 10) : null;
     const maxA = ageMax ? parseInt(ageMax, 10) : null;
     return items.filter((p) => {
+      if (showShortlistOnly && !shortlist.has(p.id)) return false;
       if (gender !== "all" && p.gender !== gender) return false;
       if (gotra !== "all" && p.gotra !== gotra) return false;
       if (city !== "all" && p.city !== city) return false;
@@ -102,7 +140,7 @@ const Matrimonial = () => {
         .filter(Boolean)
         .some((v) => (v as string).toLowerCase().includes(s));
     });
-  }, [items, q, gender, gotra, city, profession, education, ageMin, ageMax]);
+  }, [items, q, gender, gotra, city, profession, education, ageMin, ageMax, showShortlistOnly, shortlist]);
 
   const activeFilterCount =
     (gender !== "all" ? 1 : 0) +
@@ -214,6 +252,16 @@ const Matrimonial = () => {
             <X className="h-4 w-4" /> Clear
           </Button>
         )}
+        {user && (
+          <Button
+            variant={showShortlistOnly ? "default" : "outline"}
+            onClick={() => setShowShortlistOnly((v) => !v)}
+            className="gap-2"
+          >
+            <BookmarkCheck className="h-4 w-4" />
+            Saved {shortlist.size > 0 && `(${shortlist.size})`}
+          </Button>
+        )}
       </div>
 
       {showFilters && (
@@ -316,14 +364,25 @@ const Matrimonial = () => {
                 )}
               </div>
               {p.about && <p className="text-sm text-muted-foreground mt-3 line-clamp-3">{p.about}</p>}
-              <div className="mt-auto pt-4">
+              <div className="mt-auto pt-4 flex gap-2">
                 <Button
                   size="sm"
                   variant="outline"
-                  className="w-full border-accent/50"
+                  className="flex-1 border-accent/50"
                   onClick={() => openRequest(p)}
                 >
                   <Send className="h-3.5 w-3.5 mr-2" /> Request Contact
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="border-accent/50 px-3"
+                  onClick={() => toggleShortlist(p.id)}
+                  aria-label={shortlist.has(p.id) ? "Remove from shortlist" : "Save to shortlist"}
+                >
+                  {shortlist.has(p.id)
+                    ? <BookmarkCheck className="h-4 w-4 text-primary" />
+                    : <Bookmark className="h-4 w-4" />}
                 </Button>
               </div>
             </div>
