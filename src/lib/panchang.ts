@@ -33,12 +33,14 @@ export function computePanchang(date: Date, city: City): Panchang {
   const m = new MhahPanchang();
   // calendar() returns tithi/nakshatra/yoga/karana/masa/ritu/aadhmas
   const cal: any = m.calendar(date, city.lat, city.lon);
-  // calculate() returns sun/moon timing details
-  const calc: any = m.calculate(date, city.lat, city.lon);
+  const sun: any = m.sunTimer(date, city.lat, city.lon);
 
   const tithiName = cal?.Tithi?.name_en_IN ?? cal?.Tithi?.name ?? "—";
   const tithiIno = Number(cal?.Tithi?.ino ?? 0);
   const paksha = tithiIno < 15 ? "Shukla Paksha" : "Krishna Paksha";
+
+  const sr = sun?.sunRise ? new Date(sun.sunRise) : undefined;
+  const ss = sun?.sunSet ? new Date(sun.sunSet) : undefined;
 
   return {
     tithi: tithiName,
@@ -46,8 +48,8 @@ export function computePanchang(date: Date, city: City): Panchang {
     nakshatra: cal?.Nakshatra?.name_en_IN ?? cal?.Nakshatra?.name ?? "—",
     yoga: cal?.Yoga?.name_en_IN ?? cal?.Yoga?.name ?? "—",
     karana: cal?.Karna?.name_en_IN ?? cal?.Karna?.name ?? "—",
-    sunrise: fmt(calc?.sunRise),
-    sunset: fmt(calc?.sunSet),
+    sunrise: fmt(sr),
+    sunset: fmt(ss),
     ritu: cal?.Ritu?.name_en_IN ?? cal?.Ritu?.name ?? "—",
     vikram: date.getFullYear() + 57,
     shaka: date.getFullYear() - 78,
