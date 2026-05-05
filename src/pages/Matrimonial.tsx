@@ -252,6 +252,16 @@ const Matrimonial = () => {
             <X className="h-4 w-4" /> Clear
           </Button>
         )}
+        {user && (
+          <Button
+            variant={showShortlistOnly ? "default" : "outline"}
+            onClick={() => setShowShortlistOnly((v) => !v)}
+            className="gap-2"
+          >
+            <BookmarkCheck className="h-4 w-4" />
+            Saved {shortlist.size > 0 && `(${shortlist.size})`}
+          </Button>
+        )}
       </div>
 
       {showFilters && (
