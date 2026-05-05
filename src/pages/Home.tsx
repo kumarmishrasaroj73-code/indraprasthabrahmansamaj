@@ -142,6 +142,11 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Daily Shloka */}
+      <section className="container pb-4">
+        <DailyShloka />
+      </section>
+
       {/* Quick Links */}
       <section className="container py-16">
         <h2 className="font-serif text-3xl md:text-4xl font-bold text-secondary text-center mb-2">
