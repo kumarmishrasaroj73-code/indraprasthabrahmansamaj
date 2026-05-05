@@ -14,6 +14,7 @@ import {
   UserPlus,
   IndianRupee,
   Lock,
+  Sparkles,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -30,6 +31,7 @@ const navItems = [
   { to: "/admin/registrations", icon: UserPlus, label: "Registrations" },
   { to: "/admin/matrimonial", icon: Heart, label: "Matrimonial" },
   { to: "/admin/donations", icon: IndianRupee, label: "Donations" },
+  { to: "/admin/cultural", icon: Sparkles, label: "Cultural" },
   { to: "/admin/intro", icon: BookOpen, label: "About Content" },
 ];
 
